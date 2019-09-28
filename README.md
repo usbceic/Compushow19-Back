@@ -1,4 +1,4 @@
-# Bckend Apliacion COmpushow 2019
+# Backend App Compushow 2019
 ## Descripción
 
 Bakend de la aplicación basada en la web para nominar estudiantes y votar en las categorías del Compushow 2019 organizado por el Centro de Estudiantes de Ingenieria de la Computación de la Universidad Simón Bolívar.
