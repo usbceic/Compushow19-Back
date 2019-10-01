@@ -18,6 +18,8 @@ rules:
     - off
   "@typescript-eslint/no-unused-vars":
     - error
+  "@typescript-eslint/camelcase":
+    - error
   indent:
     - error
     - 2
