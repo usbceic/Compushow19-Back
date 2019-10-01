@@ -3,12 +3,12 @@ import HttpError from '../../src/errorHandling/httpError'
 var assert = require('assert')
 
 describe('Error Handler', () => {
-  
+
   test('Return HTTP error code 400', () => {
     try {
       throw new HttpError(400)
     } catch (e) {
-      assert.deepEqual(e, 
+      assert.deepEqual(e,
         {
           status: 400,
           title: 'Bad Request',
@@ -23,7 +23,7 @@ describe('Error Handler', () => {
     try {
       throw new HttpError(401)
     } catch (e) {
-      assert.deepEqual(e, 
+      assert.deepEqual(e,
         {
           status: 401,
           title: 'Unauthorized',
@@ -38,7 +38,7 @@ describe('Error Handler', () => {
     try {
       throw new HttpError(403)
     } catch (e) {
-      assert.deepEqual(e, 
+      assert.deepEqual(e,
         {
           status: 403,
           title: 'Forbidden',
@@ -53,7 +53,7 @@ describe('Error Handler', () => {
     try {
       throw new HttpError(500)
     } catch (e) {
-      assert.deepEqual(e, 
+      assert.deepEqual(e,
         {
           status: 500,
           title: 'Internal Server Error',
@@ -68,7 +68,7 @@ describe('Error Handler', () => {
     try {
       throw new HttpError(999)
     } catch (e) {
-      assert.deepEqual(e, 
+      assert.deepEqual(e,
         {
           status: 0,
           title: '',
