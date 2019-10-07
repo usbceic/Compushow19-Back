@@ -1,0 +1,19 @@
+{
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript"
+    ],
+    "editor.insertSpaces": true,
+    "[typescript]": {
+        "editor.tabSize": 2,
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/node_modules": true
+    }
+}

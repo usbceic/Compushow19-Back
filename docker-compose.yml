@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:9.6-alpine
+    environment:
+      POSTGRES_PASSWORD: 'ceic1234'
+      POSTGRES_USER: 'ceic'
+      POSTGRES_DB: 'local'
+    ports:
+      - 6543:5432

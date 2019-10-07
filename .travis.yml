@@ -1,0 +1,7 @@
+language: node_js
+node_js:
+  - "10.16.0"
+if: branch IN (master, develop)
+script:
+  - npm test
+  - npm run upload-coverage
