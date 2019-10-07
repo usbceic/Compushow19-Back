@@ -37,6 +37,19 @@ Pueden desarrollarse en funciones/clases.
 
 Contienen la abstracción a la manipulación de datos (persistentes o no). La idea es que si queremos realizar una query para crear un objeto, exportemos un método y se llame en los servicios, no colocar la query directamente en el mismo.
 
+Los cambios a la base de datos se deben hacer mediante migraciones, las cuales se crean con el comando:
+
+```bash
+npx knex migrate:make <nombre_de_migracion>
+```
+
+Para correr todas las migraciones se debe ejecutar el comando:
+
+```bash
+npx knex migrate:latest
+```
+
+Para más información, visita la [documentación](http://knexjs.org/#Migrations-CLI) de knex.
 ## Herramientas
 
 Las herramientas a usar serán:
