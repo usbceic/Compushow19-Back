@@ -1,51 +1,65 @@
-import ErrorObjectInterface from './models' // eslint-disable-line no-unused-vars
+import ErrorObjectInterface, {ErrorDetailInterface} from './models' // eslint-disable-line no-unused-vars
 
-class HttpError extends Error implements ErrorObjectInterface {
-
-  status: number;
-  title: string;
-  message: string;
-  userMessage: string;
-
-  constructor(status: number) {
+export default abstract class HttpError extends Error implements ErrorObjectInterface {
+  status: number = 0
+  title: string = ''
+  message: string = ''
+  userMessage: string = ''
+  errors?: ErrorDetailInterface[]
+  constructor() {
     super()
-
-    this.status = 0
-    this.title = ''
-    this.message = ''
-    this.userMessage = ''
-
-    switch(status) {
-    case 400: { 
-      this.status = 400
-      this.title = 'Bad Request'
-      this.message = 'A validation failed'
-      this.userMessage = 'An error has ocurred'
-      break
-    }
-    case 401: { 
-      this.status = 401
-      this.title = 'Unauthorized'
-      this.message = 'Not authenticated'
-      this.userMessage = 'Client needs to authenticate'
-      break
-    } 
-    case 403: { 
-      this.status = 403
-      this.title = 'Forbidden'
-      this.message = 'Cannot Access'
-      this.userMessage = 'Client cannot access this resource'
-      break
-    }
-    case 500: { 
-      this.status = 500
-      this.title = 'Internal Server Error'
-      this.message = 'An error has ocurred'
-      this.userMessage = 'An error has ocurred'
-      break
-    }
-    }
+    Object.setPrototypeOf(this, HttpError.prototype)
   }
 }
- 
-export default HttpError
+
+export class BadRequestError extends HttpError {
+  constructor(errors: ErrorDetailInterface[] = []) {
+    super()
+    this.status = 400
+    this.title = 'Bad Request'
+    this.message = 'A validation failed or the request was bad formatted'
+    this.userMessage = 'A validation failed'
+    this.errors = errors
+  }
+}
+
+export class UnauthenticatedError extends HttpError {
+  constructor() {
+    super()
+    this.status = 401
+    this.title = 'Unauthenticated'
+    this.message = 'Authentication failure'
+    this.userMessage = 'You are not authenticated'
+  }
+}
+
+export class UnauthorizedError extends HttpError {
+  constructor() {
+    super()
+    this.status = 403
+    this.title = 'Unauthorized'
+    this.message = 'You are not authorized to access this resource'
+    this.userMessage = 'You don\'t have permissions for this'
+  }
+}
+
+export class NotFoundError extends HttpError {
+  constructor() {
+    super()
+    this.status = 404
+    this.title = 'Not found'
+    this.message = 'The requested resource was not found'
+    this.userMessage = 'Not found'
+  }
+}
+
+
+export class InternalServerError extends HttpError {
+  constructor() {
+    super()
+    this.status = 500
+    this.title = 'Internal Server Error'
+    this.message = 'An error has occurred'
+    this.userMessage = 'An error has occurred'
+  }
+}
