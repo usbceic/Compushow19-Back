@@ -44,8 +44,8 @@ describe('Error Handler', () => {
       .expect({
         status: 400,
         title: 'Bad Request',
-        message: 'A validation failed',
-        userMessage: 'An error has ocurred',
+        message: 'A validation failed or the request was bad formatted',
+        userMessage: 'A validation failed',
       })
   })
 
@@ -55,7 +55,7 @@ describe('Error Handler', () => {
       .expect(401)
       .expect({
         status: 401,
-        title: 'Unauthorized',
+        title: 'Unauthenticated',
         message: 'Not authenticated',
         userMessage: 'Client needs to authenticate',
       })

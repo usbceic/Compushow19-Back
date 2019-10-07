@@ -19,7 +19,9 @@ export class BadRequestError extends HttpError {
     this.title = 'Bad Request'
     this.message = 'A validation failed or the request was bad formatted'
     this.userMessage = 'A validation failed'
-    this.errors = errors
+    if (errors.length !== 0) {
+      this.errors = errors
+    }
   }
 }
 
@@ -28,8 +30,8 @@ export class UnauthenticatedError extends HttpError {
     super()
     this.status = 401
     this.title = 'Unauthenticated'
-    this.message = 'Authentication failure'
-    this.userMessage = 'You are not authenticated'
+    this.message = 'Not authenticated'
+    this.userMessage = 'Client needs to authenticate'
   }
 }
 
@@ -37,9 +39,9 @@ export class UnauthorizedError extends HttpError {
   constructor() {
     super()
     this.status = 403
-    this.title = 'Unauthorized'
-    this.message = 'You are not authorized to access this resource'
-    this.userMessage = 'You don\'t have permissions for this'
+    this.title = 'Forbidden'
+    this.message = 'Cannot Access'
+    this.userMessage = 'Client cannot access this resource'
   }
 }
 
@@ -59,7 +61,7 @@ export class InternalServerError extends HttpError {
     super()
     this.status = 500
     this.title = 'Internal Server Error'
-    this.message = 'An error has occurred'
-    this.userMessage = 'An error has occurred'
+    this.message = 'An error has ocurred'
+    this.userMessage = 'An error has ocurred'
   }
 }
