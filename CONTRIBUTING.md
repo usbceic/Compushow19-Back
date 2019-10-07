@@ -55,9 +55,14 @@ Las pruebas se deben hacer llamando directamente a los endpoints, pues así logr
 
 ## Contribuir
 
+Debes sencillamente montar un PR al proyecto añadiendo como reviewers a:
+
+- @german1608
+- @aitorres
+
 ## Reusabilidad
 
-TODO
+La idea es que este back-end se reuse en los siguientes compushows. Sin embargo, lo mejor sería tener un branch separado por cada año, así tenemos una gran lista de contribuidores y es más fácil reusar cosas.
 
 ## Despliegue
 
