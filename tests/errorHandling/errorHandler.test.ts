@@ -13,6 +13,15 @@ app.get('/http400', () => {
   throw new BadRequestError()
 })
 
+app.get('/http400-with-list', () => {
+  throw new BadRequestError([{
+    field: 'field',
+    errorMessage: 'field invalid',
+    userErrorMessage: 'field invalid',
+    validationCode: 'field.invalid'
+  }])
+})
+
 app.get('/http401', () => {
   throw new UnauthenticatedError()
 })
@@ -46,6 +55,24 @@ describe('Error Handler', () => {
         title: 'Bad Request',
         message: 'A validation failed or the request was bad formatted',
         userMessage: 'A validation failed',
+      })
+  })
+
+  test('Return HTTP error code 400 with error list', () => {
+    return request(app)
+      .get('/http400-with-list')
+      .expect(400)
+      .expect({
+        status: 400,
+        title: 'Bad Request',
+        message: 'A validation failed or the request was bad formatted',
+        userMessage: 'A validation failed',
+        errors: [{
+          field: 'field',
+          errorMessage: 'field invalid',
+          userErrorMessage: 'field invalid',
+          validationCode: 'field.invalid'
+        }]
       })
   })
 
