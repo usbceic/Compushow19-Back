@@ -24,6 +24,10 @@ npm start
 * Andres Torres (Presidente de JD-CEIC 2018-2019): [@aitorres](https://github.com/aitorres)
 * Arturo Yepez (Coordinador de Información y Tecnología de JD-CEIC 2018-2019)
 
+## Cómo contribuir
+
+Lee [CONTRIBUTING.md](./CONTRIBUTING.md)
+
 ## Contacto
 
 ¡Sígannos en nuestras redes!
