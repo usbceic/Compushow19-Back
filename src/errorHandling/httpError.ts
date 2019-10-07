@@ -1,4 +1,4 @@
-import ErrorObjectInterface from './errorObjectInterface' // eslint-disable-line no-unused-vars
+import ErrorObjectInterface from './models' // eslint-disable-line no-unused-vars
 
 class HttpError extends Error implements ErrorObjectInterface {
 
