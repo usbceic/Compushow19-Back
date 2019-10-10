@@ -7,7 +7,7 @@
     "prod": "node lib/server.js",
     "lint": "eslint src tests --ext .ts",
     "pretest": "npm run lint",
-    "test": "jest --coverage",
+    "test": "ENV_FILE=.test.env jest --coverage",
     "tsc": "tsc",
     "knex": "knex",
     "upload-coverage": "cat coverage/lcov.info | coveralls"
