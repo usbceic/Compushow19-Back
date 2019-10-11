@@ -131,6 +131,22 @@ describe('User management', () => {
             validationCode: 'email.LENGTH_NOT_VALID'
           })
         })
+        it('verifies that the email is not already taken', async () => {
+          await request(app)
+            .post(url)
+            .send({
+              ...baseRequest,
+              email: 'good@email.com',
+              studentId: '22-22222'
+            })
+          await runTest({
+            ...baseRequest, email: 'good@email.com'
+          }, {
+            field: 'email',
+            validationCode: 'email.UNIQUE'
+          })
+        })
+
       })
     })
   })
