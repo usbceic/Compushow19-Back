@@ -6,7 +6,7 @@ import app from '../../src/app'
 
 beforeAll(async () => {
   await db.migrate.latest()
-  // return await db.seed.run()
+  return await db.seed.run()
 })
 
 describe('User management', () => {
@@ -23,8 +23,7 @@ describe('User management', () => {
       .post(`${baseUrl}/users`)
       .send(expected)
       .set('Accept', 'application/json')
-      .expect(200)
-      .expect('Content-Type', /text/)
+      .expect(204)
       .then(async () => {
         const user = await getUserByEmailAddress('test@test.com')
         expect(user.fullName).toBe(expected.fullName)

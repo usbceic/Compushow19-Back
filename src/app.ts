@@ -22,6 +22,7 @@ if (NODE_ENV !== 'ci' && NODE_ENV !== 'test') {
   }))
 }
 
+app.use(express.json())
 
 app.use('/health', (req, res) => {
   res.json({ status: 'UP' })
