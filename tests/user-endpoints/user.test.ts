@@ -32,122 +32,143 @@ describe('User management', () => {
       expect(user.profileUrl).toBe(expected.profileUrl)
       expect(user.studentId).toBe(expected.studentId)
     })
-    it('Returns 400 when `fullName` is invalid', async () => {
-      const requiredResponse = await request(app)
-        .post(url)
-        .send({
-          email: 'test@test.com',
-          canVote: true,
-          profileUrl: 'https://photo.url',
-          studentId: '11-11111'
+    describe('Returns 400 when `fullName` is invalid', () => {
+      it('verifies that the field is on the request', async () => {
+        const response = await request(app)
+          .post(url)
+          .send({
+            email: 'test@test.com',
+            canVote: true,
+            profileUrl: 'https://photo.url',
+            studentId: '11-11111'
+          })
+        expect(response.status).toBe(400)
+        expect(response.body.errors).toContainEqual({
+          field: 'fullName',
+          validationCode: 'fullName.REQUIRED'
         })
-      expect(requiredResponse.status).toBe(400)
-      expect(requiredResponse.body.errors).toContainEqual({
-        field: 'fullName',
-        validationCode: 'fullName.REQUIRED'
       })
-      const shouldBeStringResponse = await request(app)
-        .post(url)
-        .send({
-          email: 'test@test.com',
-          canVote: true,
-          profileUrl: 'https://photo.url',
-          studentId: '11-11111',
-          fullName: 1
+      it('verifies that the field is an string', async () => {
+        const response = await request(app)
+          .post(url)
+          .send({
+            email: 'test@test.com',
+            canVote: true,
+            profileUrl: 'https://photo.url',
+            studentId: '11-11111',
+            fullName: 1
+          })
+        expect(response.status).toBe(400)
+        expect(response.body.errors).toContainEqual({
+          field: 'fullName',
+          validationCode: 'fullName.STRING'
         })
-      expect(shouldBeStringResponse.status).toBe(400)
-      expect(shouldBeStringResponse.body.errors).toContainEqual({
-        field: 'fullName',
-        validationCode: 'fullName.STRING'
       })
-      const stringNotEmptyResponse = await request(app)
-        .post(url)
-        .send({
-          email: 'test@test.com',
-          canVote: true,
-          profileUrl: 'https://photo.url',
-          studentId: '11-11111',
-          fullName: ''
+      it('verifies that the string is not empty', async () => {
+        const response = await request(app)
+          .post(url)
+          .send({
+            email: 'test@test.com',
+            canVote: true,
+            profileUrl: 'https://photo.url',
+            studentId: '11-11111',
+            fullName: ''
+          })
+        expect(response.status).toBe(400)
+        expect(response.body.errors).toContainEqual({
+          field: 'fullName',
+          validationCode: 'fullName.LENGTH_NOT_VALID'
         })
-      expect(stringNotEmptyResponse.status).toBe(400)
-      expect(stringNotEmptyResponse.body.errors).toContainEqual({
-        field: 'fullName',
-        validationCode: 'fullName.LENGTH_NOT_VALID'
       })
-      const maxStringResponse = await request(app)
-        .post(url)
-        .send({
-          email: 'test@test.com',
-          canVote: true,
-          profileUrl: 'https://photo.url',
-          studentId: '11-11111',
-          fullName: '111111111111111111111111111111111111111111111111111'
+      it('verifieds that the string doesn\'t exceeds 50 chars', async () => {
+        const maxStringResponse = await request(app)
+          .post(url)
+          .send({
+            email: 'test@test.com',
+            canVote: true,
+            profileUrl: 'https://photo.url',
+            studentId: '11-11111',
+            fullName: '111111111111111111111111111111111111111111111111111'
+          })
+        expect(maxStringResponse.status).toBe(400)
+        expect(maxStringResponse.body.errors).toContainEqual({
+          field: 'fullName',
+          validationCode: 'fullName.LENGTH_NOT_VALID'
         })
-      expect(maxStringResponse.status).toBe(400)
-      expect(maxStringResponse.body.errors).toContainEqual({
-        field: 'fullName',
-        validationCode: 'fullName.LENGTH_NOT_VALID'
       })
-
     })
 
-    it('Returns 400 when `email` is invalid', async () => {
+    describe('Returns 400 when `email` is invalid', () => {
       const baseRequest = {
         fullName: 'Test Name',
         canVote: true,
         profileUrl: 'https://photo.url',
         studentId: '11-11111'
       }
-      const requiredResponse = await request(app)
-        .post(url)
-        .send({
-          ...baseRequest
+      it('verifies that the field is in the request', async () => {
+        const response = await request(app)
+          .post(url)
+          .send({
+            ...baseRequest
+          })
+        expect(response.status).toBe(400)
+        expect(response.body.errors).toContainEqual({
+          field: 'email',
+          validationCode: 'email.REQUIRED'
         })
-      expect(requiredResponse.body.errors).toContainEqual({
-        field: 'email',
-        validationCode: 'email.REQUIRED'
       })
-      const shouldBeStringResponse = await request(app)
-        .post(url)
-        .send({
-          ...baseRequest,
-          email: 1
+      it('verifies that the field is an string', async () => {
+        const response = await request(app)
+          .post(url)
+          .send({
+            ...baseRequest,
+            email: 1
+          })
+        expect(response.status).toBe(400)
+        expect(response.body.errors).toContainEqual({
+          field: 'email',
+          validationCode: 'email.STRING'
         })
-      expect(shouldBeStringResponse.body.errors).toContainEqual({
-        field: 'email',
-        validationCode: 'email.STRING'
       })
-      const shouldBeEmailResponse = await request(app)
-        .post(url)
-        .send({
-          ...baseRequest,
-          email: 'not-an-email'
+      it('verifies that the field is an email', async () => {
+        const response = await request(app)
+          .post(url)
+          .send({
+            ...baseRequest,
+            email: 'not-an-email'
+          })
+        expect(response.status).toBe(400)
+        expect(response.body.errors).toContainEqual({
+          field: 'email',
+          validationCode: 'email.EMAIL'
         })
-      expect(shouldBeEmailResponse.body.errors).toContainEqual({
-        field: 'email',
-        validationCode: 'email.EMAIL'
       })
-      const stringNotEmptyResponse = await request(app)
-        .post(url)
-        .send({
-          ...baseRequest,
-          email: ''
+      it('verifies that the field is an email', async () => {
+        const response = await request(app)
+          .post(url)
+          .send({
+            ...baseRequest,
+            email: ''
+          })
+        expect(response.status).toBe(400)
+        expect(response.body.errors).toContainEqual({
+          field: 'email',
+          validationCode: 'email.LENGTH_NOT_VALID'
         })
-      expect(stringNotEmptyResponse.body.errors).toContainEqual({
-        field: 'email',
-        validationCode: 'email.LENGTH_NOT_VALID'
       })
-      const maxStringResponse = await request(app)
-        .post(url)
-        .send({
-          ...baseRequest,
-          email: 'very-very-very-very-long-long-long@email.email.comm'
+      it('verifies that the field doesn\'t exceed 50 chars', async () => {
+        const response = await request(app)
+          .post(url)
+          .send({
+            ...baseRequest,
+            email: 'very-very-very-very-long-long-long@email.email.comm'
+          })
+        expect(response.status).toBe(400)
+        expect(response.body.errors).toContainEqual({
+          field: 'email',
+          validationCode: 'email.LENGTH_NOT_VALID'
         })
-      expect(maxStringResponse.body.errors).toContainEqual({
-        field: 'email',
-        validationCode: 'email.LENGTH_NOT_VALID'
       })
-
     })
   })
 })
