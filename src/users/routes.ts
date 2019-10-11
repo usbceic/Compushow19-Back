@@ -1,10 +1,11 @@
 import express from 'express'
-import { asyncWrap } from '../utils'
+import { asyncWrap, validateRequest } from '../utils'
 import { createUser } from './service'
+import { userSchemaValidator } from './validations'
 
 const router = express.Router()
 
-router.post('/users', asyncWrap(async (req, res) => {
+router.post('/users', validateRequest(userSchemaValidator), asyncWrap(async (req, res) => {
   const user = await createUser({
     fullName: req.body.fullName,
     email: req.body.email,

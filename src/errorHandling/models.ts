@@ -8,8 +8,6 @@ interface ErrorObjectInterface {
 
 interface ErrorDetailInterface {
   field: string;
-  errorMessage: string;
-  userErrorMessage: string;
   validationCode: string;
 }
 

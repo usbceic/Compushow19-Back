@@ -12,6 +12,7 @@ beforeAll(async () => {
 describe('User management', () => {
   const baseUrl = '/v1/api'
   describe('User creation', () => {
+    const url = `${baseUrl}/users`
     it('Allows user creation', async () => {
       const expected : CreateUserRequest = {
         fullName: 'Test User',
@@ -21,7 +22,7 @@ describe('User management', () => {
         studentId: '11-11111'
       }
       const res = await request(app)
-        .post(`${baseUrl}/users`)
+        .post(url)
         .send(expected)
       expect(res.status).toBe(204)
       const user = await getUserByEmailAddress('test@test.com')
@@ -30,6 +31,29 @@ describe('User management', () => {
       expect(user.canVote).toBe(expected.canVote)
       expect(user.profileUrl).toBe(expected.profileUrl)
       expect(user.studentId).toBe(expected.studentId)
+    })
+    it('Returns 404 when `fullName` is invalid', async () => {
+      const baseExpected = {
+        status: 400,
+        title: 'Bad Request',
+        message: 'A validation failed or the request was bad formatted',
+        userMessage: 'A validation failed'
+      }
+      await request(app)
+        .post(url)
+        .send({
+          email: 'test@test.com',
+          canVote: true,
+          profileUrl: 'https://photo.url',
+          studentId: '11-11111'
+        })
+        .expect({
+          ...baseExpected,
+          errors: [{
+            field: 'fullName',
+            validationCode: 'fullName.REQUIRED'
+          }]
+        })
     })
   })
 })

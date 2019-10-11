@@ -16,8 +16,6 @@ app.get('/http400', () => {
 app.get('/http400-with-list', () => {
   throw new BadRequestError([{
     field: 'field',
-    errorMessage: 'field invalid',
-    userErrorMessage: 'field invalid',
     validationCode: 'field.invalid'
   }])
 })
@@ -69,8 +67,6 @@ describe('Error Handler', () => {
         userMessage: 'A validation failed',
         errors: [{
           field: 'field',
-          errorMessage: 'field invalid',
-          userErrorMessage: 'field invalid',
           validationCode: 'field.invalid'
         }]
       })
