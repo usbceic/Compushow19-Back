@@ -148,6 +148,30 @@ describe('User management', () => {
         })
 
       })
+      describe('Returns 400 when `canVote` is invalid', () => {
+        const baseRequest = {
+          fullName: 'Test Name',
+          email: 'test1@test1.com',
+          profileUrl: 'https://photo.url',
+          studentId: '11-11111'
+        }
+        it('verifies that the field is in the request', async () => {
+          await runTest(baseRequest, {
+            field: 'canVote',
+            validationCode: 'canVote.REQUIRED'
+          })
+        })
+        it('verifies that the field is a boolean', async () => {
+          await runTest({
+            ...baseRequest,
+            canVote: '1ff'
+          }, {
+            field: 'canVote',
+            validationCode: 'canVote.BOOLEAN'
+          })
+        })
+      })
+
     })
   })
 })

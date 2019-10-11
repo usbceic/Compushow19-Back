@@ -50,5 +50,14 @@ export const userSchemaValidator = checkSchema({
         }
       }
     }
+  },
+  canVote: {
+    exists: {
+      errorMessage: 'canVote.REQUIRED'
+    },
+    isBoolean: {
+      errorMessage: 'canVote.BOOLEAN',
+    },
+    toBoolean: true
   }
 })
