@@ -16,5 +16,5 @@ install:
   - cp .test.env .env
   - npm i
 script:
-  - npm test
+  - npm test -- --detectOpenHandles
   - npm run upload-coverage
