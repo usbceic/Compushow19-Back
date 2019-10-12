@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import ErrorObjectInterface, {ErrorDetailInterface} from './models' // eslint-disable-line no-unused-vars
 
 export default abstract class HttpError extends Error implements ErrorObjectInterface {

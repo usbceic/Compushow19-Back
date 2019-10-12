@@ -16,8 +16,6 @@ app.get('/http400', () => {
 app.get('/http400-with-list', () => {
   throw new BadRequestError([{
     field: 'field',
-    errorMessage: 'field invalid',
-    userErrorMessage: 'field invalid',
     validationCode: 'field.invalid'
   }])
 })
@@ -46,8 +44,8 @@ app.use(errorHandler)
 
 describe('Error Handler', () => {
 
-  test('Return HTTP error code 400', () => {
-    return request(app)
+  test('Return HTTP error code 400', async () => {
+    await request(app)
       .get('/http400')
       .expect(400)
       .expect({
@@ -58,8 +56,8 @@ describe('Error Handler', () => {
       })
   })
 
-  test('Return HTTP error code 400 with error list', () => {
-    return request(app)
+  test('Return HTTP error code 400 with error list', async () => {
+    await request(app)
       .get('/http400-with-list')
       .expect(400)
       .expect({
@@ -69,15 +67,13 @@ describe('Error Handler', () => {
         userMessage: 'A validation failed',
         errors: [{
           field: 'field',
-          errorMessage: 'field invalid',
-          userErrorMessage: 'field invalid',
           validationCode: 'field.invalid'
         }]
       })
   })
 
-  test('Return HTTP error code 401', () => {
-    return request(app)
+  test('Return HTTP error code 401', async () => {
+    await request(app)
       .get('/http401')
       .expect(401)
       .expect({
@@ -88,8 +84,8 @@ describe('Error Handler', () => {
       })
   })
 
-  test('Return HTTP error code 403', () => {
-    return request(app)
+  test('Return HTTP error code 403', async () => {
+    await request(app)
       .get('/http403')
       .expect(403)
       .expect({
@@ -100,8 +96,8 @@ describe('Error Handler', () => {
       })
   })
 
-  test('Return HTTP error code 404', () => {
-    return request(app)
+  test('Return HTTP error code 404', async () => {
+    await request(app)
       .get('/http404')
       .expect(404)
       .expect({
@@ -112,8 +108,8 @@ describe('Error Handler', () => {
       })
   })
 
-  test('Return HTTP error code 500', () => {
-    return request(app)
+  test('Return HTTP error code 500', async () => {
+    await request(app)
       .get('/http500')
       .expect(500)
       .expect({
@@ -123,8 +119,8 @@ describe('Error Handler', () => {
         userMessage: 'An error has ocurred',
       })
   })
-  test('Return HTTP error code 500 on unknown errors', () => {
-    return request(app)
+  test('Return HTTP error code 500 on unknown errors', async () => {
+    await request(app)
       .get('/genericerror')
       .expect(500)
       .expect({

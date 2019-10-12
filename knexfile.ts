@@ -1,11 +1,10 @@
 // Update with your config settings.
-import dotenv from 'dotenv'
+import {PG_CONNECTION_STRING} from './src/config'
 
-dotenv.config()
 
 module.exports = {
   client: 'pg',
-  connection: process.env.PG_CONNECTION_STRING,
+  connection: PG_CONNECTION_STRING,
   migration: {
     extension: 'ts'
   }
