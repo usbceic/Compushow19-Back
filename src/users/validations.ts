@@ -59,5 +59,14 @@ export const userSchemaValidator = checkSchema({
       errorMessage: 'canVote.BOOLEAN',
     },
     toBoolean: true
+  },
+  profileUrl: {
+    optional: true,
+    isURL: {
+      errorMessage: 'profileUrl.URL'
+    },
+    isString: {
+      errorMessage: 'profileUrl.STRING'
+    }
   }
 })

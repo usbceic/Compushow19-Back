@@ -13,7 +13,7 @@ router.post('/users', validateRequest(userSchemaValidator), asyncWrap(async (req
     profileUrl: req.body.profileUrl,
     studentId: req.body.studentId
   })
-  res.status(204).json(user)
+  res.status(201).json(user)
 }))
 
 export default router

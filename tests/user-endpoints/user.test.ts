@@ -24,7 +24,7 @@ describe('User management', () => {
       const res = await request(app)
         .post(url)
         .send(expected)
-      expect(res.status).toBe(204)
+      expect(res.status).toBe(201)
       const user = await getUserByEmailAddress('test@test.com')
       expect(user.fullName).toBe(expected.fullName)
       expect(user.email).toBe(expected.email)
@@ -168,6 +168,28 @@ describe('User management', () => {
           }, {
             field: 'canVote',
             validationCode: 'canVote.BOOLEAN'
+          })
+        })
+      })
+      describe('Returns 400 when `profileUrl` is invalid', () => {
+        const baseRequest = {
+          fullName: 'Test Name',
+          email: 'test1@test1.com',
+          canVote: true,
+          studentId: '11-11111'
+        }
+        it('should allow creating an user without profileUrl', async () => {
+          await request(app).post(url)
+            .send({...baseRequest, email: 'test2@test2.com', studentId: '33-33333'})
+            .expect(201)
+        })
+        it('verifies that the field is an string', async () => {
+          await runTest({
+            ...baseRequest,
+            profileUrl: 1231
+          }, {
+            field: 'profileUrl',
+            validationCode: 'profileUrl.STRING'
           })
         })
       })
