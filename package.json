@@ -10,7 +10,8 @@
     "test": "ENV_FILE=.test.env jest --coverage",
     "tsc": "tsc",
     "knex": "knex",
-    "upload-coverage": "cat coverage/lcov.info | coveralls"
+    "upload-coverage": "cat coverage/lcov.info | coveralls",
+    "postinstall": "knex migrate:latest"
   },
   "repository": {
     "type": "git",

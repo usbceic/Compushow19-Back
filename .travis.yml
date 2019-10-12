@@ -1,7 +1,23 @@
 language: node_js
 node_js:
+  - "8.11.0"
+  - "8.12.0"
+  - "8.13.0"
+  - "8.14.0"
+  - "10.13.0"
+  - "10.14.0"
+  - "10.15.0"
   - "10.16.0"
+services:
+  - postgresql
+addons:
+  postgresql: "9.6"
 if: branch IN (master, develop)
+install:
+  - psql -c 'create database local;' -U postgres
+  - sed -i '/^PG_CONNECTION_STRING/d' .test.env
+  - echo 'PG_CONNECTION_STRING=postgres://postgres:@localhost:5432/local' >> .test.env
+  - npm i
 script:
   - npm test
   - npm run upload-coverage
