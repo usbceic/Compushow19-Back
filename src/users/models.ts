@@ -4,7 +4,7 @@ import { db } from '../config'
 const TABLE_NAME = 'users'
 
 const USER_FIELDS = [
-  'id', 'fullName', 'email', 'phoneNumber', 'canVote', 'profileUrl', 'studentId'
+  'id', 'fullName', 'email', 'phoneNumber', 'telegramHandle', 'canVote', 'profileUrl', 'studentId'
 ]
 
 export interface UserModel {
