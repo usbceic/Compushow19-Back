@@ -9,6 +9,10 @@ beforeAll(async () => {
   return await db.seed.run()
 })
 
+afterAll(async () => {
+  await db.destroy()
+})
+
 describe('User management', () => {
   const baseUrl = '/v1/api'
   describe('User creation', () => {
