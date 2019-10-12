@@ -1,5 +1,5 @@
 import { checkSchema } from 'express-validator'
-import { existsByEmailAddress } from './models'
+import { existsByEmailAddress, existsByStudentId } from './models'
 
 export const userSchemaValidator = checkSchema({
   fullName: {
@@ -52,6 +52,7 @@ export const userSchemaValidator = checkSchema({
     }
   },
   canVote: {
+    in: ['body'],
     exists: {
       errorMessage: 'canVote.REQUIRED'
     },
@@ -61,12 +62,40 @@ export const userSchemaValidator = checkSchema({
     toBoolean: true
   },
   profileUrl: {
+    in: ['body'],
     optional: true,
     isURL: {
       errorMessage: 'profileUrl.URL'
     },
     isString: {
       errorMessage: 'profileUrl.STRING'
+    }
+  },
+  studentId: {
+    in: ['body'],
+    isString: {
+      errorMessage: 'studentId.STRING',
+    },
+    exists: {
+      options: {
+        checkNull: true
+      },
+      errorMessage: 'studentId.REQUIRED',
+    },
+    isLength: {
+      errorMessage: 'studentId.LENGTH_NOT_VALID',
+      options: {
+        min: 1,
+        max: 50
+      }
+    },
+    custom: {
+      options: async (value) => {
+        const exists = await existsByStudentId(value)
+        if (exists) {
+          return Promise.reject('studentId.UNIQUE')
+        }
+      }
     }
   }
 })

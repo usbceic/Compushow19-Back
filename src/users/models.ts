@@ -18,17 +18,21 @@ export interface UserModel {
   studentId: string
 }
 
-
-export async function getAllUsers() : Promise<UserModel[]> {
-  return await db.select().from<UserModel>(TABLE_NAME)
-}
-
 export async function getUserByEmailAddress(email: string) : Promise<UserModel> {
   return await db(TABLE_NAME).where('email', email).first()
 }
 
+export async function getUserByStudentId(studentId: string) : Promise<UserModel> {
+  return await db(TABLE_NAME).where('studentId', studentId).first()
+}
+
+
 export async function existsByEmailAddress(email: string) : Promise<boolean> {
   return (await getUserByEmailAddress(email)) !== undefined
+}
+
+export async function existsByStudentId(studentId: string) : Promise<boolean> {
+  return (await getUserByStudentId(studentId)) !== undefined
 }
 
 export async function insertUser(user: UserModel) : Promise<UserModel> {

@@ -5,7 +5,9 @@ import { NODE_ENV } from '../config'
 
 // eslint-disable-next-line no-unused-vars
 function errorHandler(error: Error, request: Request, response: Response, next: NextFunction) {
-  if (NODE_ENV !== 'test' && NODE_ENV !== 'ci') {
+  /* istanbul ignore next */
+  if (NODE_ENV !== 'test') {
+    /* istanbul ignore next */
     console.error(error)
   }
   if (error instanceof HttpError) {

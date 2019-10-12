@@ -7,7 +7,9 @@ import { NODE_ENV } from './config'
 
 const app = express()
 
-if (NODE_ENV !== 'ci' && NODE_ENV !== 'test') {
+/* istanbul ignore next */
+if (NODE_ENV !== 'test') {
+  /* istanbul ignore next */
   app.use(expressWinston.logger({
     transports: [
       new winston.transports.Console()

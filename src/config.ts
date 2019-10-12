@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { config } from 'dotenv'
 import knex from 'knex'
 import path from 'path'

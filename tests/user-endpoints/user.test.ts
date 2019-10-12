@@ -193,6 +193,61 @@ describe('User management', () => {
           })
         })
       })
+      describe('Returns 400 when `email` is invalid', () => {
+        const baseRequest = {
+          fullName: 'Test Name',
+          canVote: true,
+          profileUrl: 'https://photo.url',
+          email: 'test3@test3.com'
+        }
+        it('verifies that the field is in the request', async () => {
+          await runTest(baseRequest, {
+            field: 'studentId',
+            validationCode: 'studentId.REQUIRED'
+          })
+        })
+        it('verifies that the field is an string', async () => {
+          await runTest({
+            ...baseRequest,
+            studentId: 1
+          }, {
+            field: 'studentId',
+            validationCode: 'studentId.STRING'
+          })
+        })
+        it('verifies that the field has the required length', async () => {
+          await runTest({
+            ...baseRequest,
+            studentId: ''
+          }, {
+            field: 'studentId',
+            validationCode: 'studentId.LENGTH_NOT_VALID'
+          })
+        })
+        it('verifies that the field doesn\'t exceed 50 chars', async () => {
+          await runTest({
+            ...baseRequest,
+            studentId: 'very-very-very-very-long-long-longfstudentId.studentId.comm'
+          }, {
+            field: 'studentId',
+            validationCode: 'studentId.LENGTH_NOT_VALID'
+          })
+        })
+        it('verifies that the studentId is not already taken', async () => {
+          await request(app)
+            .post(url)
+            .send({
+              ...baseRequest,
+              studentId: '22-22222'
+            })
+          await runTest({
+            ...baseRequest, studentId: '22-22222', email: 'test4@test4.com'
+          }, {
+            field: 'studentId',
+            validationCode: 'studentId.UNIQUE'
+          })
+        })
+      })
 
     })
   })

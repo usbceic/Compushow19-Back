@@ -9,9 +9,9 @@ export async function up(knex: Knex): Promise<any> {
       table.string('email', 50).notNullable().unique()
       table.boolean('canVote').notNullable().defaultTo(true)
       table.string('phoneNumber', 50).notNullable().defaultTo('')
-      table.string('profileUrl').notNullable().defaultTo('')
-      table.string('studentId').unique().notNullable()
-      table.string('telegramHandle').unique().nullable().defaultTo(null)
+      table.string('profileUrl', 50).notNullable().defaultTo('')
+      table.string('studentId', 50).unique().notNullable()
+      table.string('telegramHandle', 50).unique().nullable().defaultTo(null)
     })
 }
 
