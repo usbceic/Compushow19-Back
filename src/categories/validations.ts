@@ -22,6 +22,9 @@ export const categorySchemaValidator = checkSchema({
     },
     custom: {
       options: async (value) => {
+        if (value === undefined || value === null) {
+          return Promise.reject('name.UNIQUE')
+        }
         const exists = await categoryExistsByName(value)
         if (exists) {
           return Promise.reject('name.UNIQUE')
