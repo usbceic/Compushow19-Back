@@ -3,6 +3,7 @@ import expressWinston from 'express-winston'
 import winston from 'winston'
 import errorHandler from './errorHandling/errorHandler'
 import userRoutes from './users/routes'
+import categoryRoutes from './categories/routes'
 import { NODE_ENV } from './config'
 
 const app = express()
@@ -32,6 +33,7 @@ app.use('/health', (req, res) => {
 })
 
 app.use('/v1/api', userRoutes)
+app.use('/v1/api', categoryRoutes)
 
 app.use(errorHandler)
 
