@@ -439,7 +439,7 @@ describe('Category management', () => {
 
     it('Raises a not found error on invalid id', async() => {
       const id = -1
-      const lookupUrl = url + `/${id}`
+      const lookupUrl = `${url}/${id}`
       const res = await request(app)
         .get(lookupUrl)
       expect(res.status).toBe(404)
