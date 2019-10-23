@@ -26,3 +26,6 @@ export const validateRequest = (validations: ValidationChain[]) => {
 export function raise404() : NotFoundError {
   return new NotFoundError()
 }
+export function raise400() : BadRequestError {
+  return new BadRequestError()
+}
