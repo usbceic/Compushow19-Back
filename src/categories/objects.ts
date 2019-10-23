@@ -9,4 +9,12 @@ export interface CreateCategoryRequest {
   color: string
 }
 
+export interface GetCategoryRequest {
+  id: number
+}
+
+export interface DeleteCategoryRequest {
+  id: number
+}
+
 export interface Category extends CategoryModel {}
