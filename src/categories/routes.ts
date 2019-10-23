@@ -1,9 +1,14 @@
 import express from 'express'
 import { asyncWrap, validateRequest } from '../utils'
-import { createCategory } from './service'
+import { listCategories, createCategory } from './service'
 import { categorySchemaValidator } from './validations'
 
 const router = express.Router()
+
+router.get('/categories', asyncWrap(async (req, res) => {
+  const categories = await listCategories()
+  res.status(200).json(categories)
+}))
 
 router.post('/categories', validateRequest(categorySchemaValidator), asyncWrap(async (req, res) => {
   const category = await createCategory({

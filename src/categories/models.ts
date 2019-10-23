@@ -34,3 +34,11 @@ export async function insertCategory(category: CategoryModel) : Promise<Category
   return await db(TABLE_NAME)
     .returning(CATEGORY_FIELDS).insert(category)
 }
+
+export async function getAllCategories() : Promise<[CategoryModel]> {
+  return await db(TABLE_NAME)
+    .select(CATEGORY_FIELDS)
+    .then((categories) => {
+      return <[CategoryModel]>categories
+    })
+}
