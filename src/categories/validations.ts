@@ -121,5 +121,108 @@ export const categorySchemaValidator = checkSchema({
       }
     }
   },
+})
 
+export const updateCategorySchemaValidator = checkSchema({
+  name: {
+    optional: true,
+    exists: {
+      options: {
+        checkNull: true
+      },
+      errorMessage: 'name.REQUIRED',
+    },
+    in: ['body'],
+    isString: {
+      errorMessage: 'name.STRING'
+    },
+    isLength: {
+      errorMessage: 'name.LENGTH_NOT_VALID',
+      options: {
+        min: 1,
+        max: 50
+      }
+    },
+    custom: {
+      options: async (value) => {
+        if (value === undefined || value === null) {
+          return Promise.reject('name.UNIQUE')
+        }
+        const exists = await categoryExistsByName(value)
+        if (exists) {
+          return Promise.reject('name.UNIQUE')
+        }
+      }
+    }
+  },
+  extra: {
+    in: ['body'],
+    optional: true,
+    isString: {
+      errorMessage: 'extra.STRING'
+    },
+  },
+  description: {
+    optional: true,
+    exists: {
+      options: {
+        checkNull: true
+      },
+      errorMessage: 'description.REQUIRED',
+    },
+    in: ['body'],
+    isString: {
+      errorMessage: 'description.STRING'
+    },
+    isLength: {
+      errorMessage: 'description.LENGTH_NOT_VALID',
+      options: {
+        min: 1,
+        max: 255
+      }
+    }
+  },
+  pictureUrl: {
+    optional: true,
+    exists: {
+      options: {
+        checkNull: true
+      },
+      errorMessage: 'pictureUrl.REQUIRED',
+    },
+    in: ['body'],
+    isString: {
+      errorMessage: 'pictureUrl.STRING'
+    },
+    isLength: {
+      errorMessage: 'pictureUrl.LENGTH_NOT_VALID',
+      options: {
+        min: 1,
+        max: 255
+      }
+    },
+    isURL: {
+      errorMessage: 'pictureUrl.URL'
+    },
+  },
+  color: {
+    optional: true,
+    exists: {
+      options: {
+        checkNull: true
+      },
+      errorMessage: 'color.REQUIRED',
+    },
+    in: ['body'],
+    isString: {
+      errorMessage: 'color.STRING'
+    },
+    isLength: {
+      errorMessage: 'color.LENGTH_NOT_VALID',
+      options: {
+        min: 1,
+        max: 255
+      }
+    }
+  },
 })

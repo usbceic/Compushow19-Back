@@ -1,4 +1,5 @@
 import { db } from '../config'
+import { ModifyCategoryRequest } from './objects'
 
 const TABLE_NAME = 'categories'
 
@@ -41,6 +42,11 @@ export async function categoryExistsById(id: number) : Promise<boolean> {
 export async function insertCategory(category: CategoryModel) : Promise<CategoryModel> {
   return await db(TABLE_NAME)
     .returning(CATEGORY_FIELDS).insert(category)
+}
+
+export async function updateCategory(category: ModifyCategoryRequest) : Promise<CategoryModel> {
+  return await db(TABLE_NAME)
+    .returning(CATEGORY_FIELDS).update(category)
 }
 
 export async function deleteCategoryById(id: number) : Promise<boolean> {

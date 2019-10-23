@@ -9,6 +9,14 @@ export interface CreateCategoryRequest {
   color: string
 }
 
+export interface ModifyCategoryRequest {
+  name?: string
+  extra?: string
+  description?: string
+  pictureUrl?: string
+  color?: string
+}
+
 export interface GetCategoryRequest {
   id: number
 }
