@@ -24,6 +24,7 @@ if (NODE_ENV !== 'test') {
   }))
 }
 
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 app.use('/health', (req, res) => {
