@@ -26,14 +26,11 @@ export async function getCategoryByName(name: string) : Promise<CategoryModel> {
   return await db(TABLE_NAME).where('name', name).first()
 }
 
-export async function getCategoryById(id: number) : Promise<CategoryModel> {
-  return await db(TABLE_NAME).where('id', id).first()
-}
-
 export async function categoryExistsByName(name: string) : Promise<boolean> {
   return (await getCategoryByName(name)) !== undefined
 }
 
-export async function categoryExistsById(id: number) : Promise<boolean> {
-  return (await getCategoryById(id)) !== undefined
+export async function insertCategory(category: CategoryModel) : Promise<CategoryModel> {
+  return await db(TABLE_NAME)
+    .returning(CATEGORY_FIELDS).insert(category)
 }
