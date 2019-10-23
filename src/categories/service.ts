@@ -9,8 +9,8 @@ export async function createCategory(request: CreateCategoryRequest) : Promise<C
   return await insertCategory(request)
 }
 
-export async function modifyCategory(request: ModifyCategoryRequest) : Promise<CategoryModel> {
-  return await updateCategory(request)
+export async function modifyCategory(id: number, request: ModifyCategoryRequest) : Promise<CategoryModel> {
+  return await updateCategory(id, request)
 }
 
 export async function getCategory(request: GetCategoryRequest) : Promise<CategoryModel> {

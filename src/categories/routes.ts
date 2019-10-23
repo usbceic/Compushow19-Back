@@ -56,15 +56,12 @@ router.put('/categories/:categoryId', validateRequest(updateCategorySchemaValida
   if (originalCategory === undefined) {
     res.status(404).json(raise404())
   } else {
-    modifyCategory({
+    const category = await modifyCategory(id, {
       name: req.body.name,
       extra: req.body.extra,
       description: req.body.description,
       pictureUrl: req.body.pictureUrl,
       color: req.body.color
-    })
-    const category = await getCategory({
-      id: id
     })
     res.status(200).json(category)
   }
