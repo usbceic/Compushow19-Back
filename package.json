@@ -28,7 +28,7 @@
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
     "express-winston": "^4.0.0",
-    "knex": "^0.19.4",
+    "knex": "^0.19.5",
     "pg": "^7.12.1",
     "winston": "^3.2.1"
   },
