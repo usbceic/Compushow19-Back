@@ -52,6 +52,7 @@ export const categorySchemaValidator = checkSchema({
     },
     isIn: {
       options: ['TO_USER', 'TO_TWO_USERS', 'ONLY_EXTRA'],
+      errorMessage: 'type.INVALID_VALUE'
     },
   },
   extra: {
@@ -59,6 +60,13 @@ export const categorySchemaValidator = checkSchema({
     optional: true,
     isString: {
       errorMessage: 'extra.STRING'
+    },
+    isLength: {
+      errorMessage: 'extra.LENGTH_NOT_VALID',
+      options: {
+        min: 7,
+        max: 255
+      }
     },
   },
   description: {
@@ -117,7 +125,7 @@ export const categorySchemaValidator = checkSchema({
       errorMessage: 'color.LENGTH_NOT_VALID',
       options: {
         min: 1,
-        max: 255
+        max: 50
       }
     }
   },
@@ -142,17 +150,6 @@ export const updateCategorySchemaValidator = checkSchema({
         min: 1,
         max: 50
       }
-    },
-    custom: {
-      options: async (value) => {
-        if (value === undefined || value === null) {
-          return Promise.reject('name.UNIQUE')
-        }
-        const exists = await categoryExistsByName(value)
-        if (exists) {
-          return Promise.reject('name.UNIQUE')
-        }
-      }
     }
   },
   extra: {
@@ -221,7 +218,7 @@ export const updateCategorySchemaValidator = checkSchema({
       errorMessage: 'color.LENGTH_NOT_VALID',
       options: {
         min: 1,
-        max: 255
+        max: 50
       }
     }
   },
