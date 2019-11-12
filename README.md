@@ -10,13 +10,14 @@ Backend de la aplicación basada en la web para nominar estudiantes y votar en l
 ## Requerimientos
 
 - Node v10.16.0
-- Docker y Docker Compose
+- Docker
+- Docker Compose
 
 ## Instalación
 
 ```bash
-npm i
 docker-compose up -d
+npm i
 npm start
 ```
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { ValidationChain, validationResult } from 'express-validator'
-import { BadRequestError } from './errorHandling/httpError'
+import { NotFoundError, BadRequestError } from './errorHandling/httpError'
 import { ErrorDetailInterface } from './errorHandling/models'
 
 export const asyncWrap = (fn : (req: Request, res: Response) => Promise<any>) =>
@@ -21,4 +21,11 @@ export const validateRequest = (validations: ValidationChain[]) => {
       }
     })))
   }
+}
+
+export function raise404() : NotFoundError {
+  return new NotFoundError()
+}
+export function raise400() : BadRequestError {
+  return new BadRequestError()
 }

@@ -8,6 +8,7 @@ import {
 import request from 'supertest'
 import app from '../../src/app'
 import errorHandler from '../../src/errorHandling/errorHandler'
+import { raise404, raise400 } from '../../src/utils'
 
 app.get('/http400', () => {
   throw new BadRequestError()
@@ -43,6 +44,20 @@ app.get('/genericerror', () => {
 app.use(errorHandler)
 
 describe('Error Handler', () => {
+
+  test('Correctly create a NotFoundError instance', () => {
+    const expected = new NotFoundError()
+    const result = raise404()
+
+    expect(result).toStrictEqual(expected)
+  })
+
+  test('Correctly create a BadRequestError instance', () => {
+    const expected = new BadRequestError()
+    const result = raise400()
+
+    expect(result).toStrictEqual(expected)
+  })
 
   test('Return HTTP error code 400', async () => {
     await request(app)
