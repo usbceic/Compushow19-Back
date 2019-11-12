@@ -444,6 +444,14 @@ describe('Category management', () => {
         .get(lookupUrl)
       expect(res.status).toBe(404)
     })
+
+    it('Raises a not found error on lookup by string', async() => {
+      const id = 'test'
+      const lookupUrl = `${url}/${id}`
+      const res = await request(app)
+        .get(lookupUrl)
+      expect(res.status).toBe(404)
+    })
   })
 
   describe('Category lookup by name', () => {
