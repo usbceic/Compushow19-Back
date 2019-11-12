@@ -252,8 +252,8 @@ export const categoryLookupSchemaValidator = checkSchema({
 })
 
 export const categoryNameLookupSchemaValidator = checkSchema({
-  categoryName: {
-    in: ['params'],
+  name: {
+    in: ['query'],
     exists: {
       options: {
         checkNull: true
@@ -262,6 +262,10 @@ export const categoryNameLookupSchemaValidator = checkSchema({
     },
     isString: {
       errorMessage: 'name.STRING'
+    },
+    isEmpty: {
+      negated: true,
+      errorMessage: 'name.NOT_EMPTY'
     }
   }
 })

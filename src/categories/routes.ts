@@ -11,11 +11,9 @@ router.get('/categories', asyncWrap(async (req, res) => {
   res.status(200).json(categories)
 }))
 
-router.get('/categories/:categoryId', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
-  const id = Number(req.params.categoryId)
-  const category = await getCategory({
-    id: id
-  })
+router.get('/categories/byName', validateRequest(categoryNameLookupSchemaValidator), asyncWrap(async (req, res) => {
+  const name = req.query.name
+  const category = await getCategoryByName(name)
   if (category === undefined) {
     res.status(404).json(raise404())
   } else {
@@ -23,9 +21,11 @@ router.get('/categories/:categoryId', validateRequest(categoryLookupSchemaValida
   }
 }))
 
-router.get('/categories/byName/:categoryName', validateRequest(categoryNameLookupSchemaValidator), asyncWrap(async (req, res) => {
-  const name = req.params.categoryName
-  const category = await getCategoryByName(name)
+router.get('/categories/:categoryId', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
+  const id = Number(req.params.categoryId)
+  const category = await getCategory({
+    id: id
+  })
   if (category === undefined) {
     res.status(404).json(raise404())
   } else {
