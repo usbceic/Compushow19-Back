@@ -1,8 +1,8 @@
-import { CategoryModel } from './models'
+import { CategoryModel, categoryType } from './models'
 
 export interface CreateCategoryRequest {
   name: string
-  type: string
+  type: categoryType
   extra?: string
   description: string
   pictureUrl: string

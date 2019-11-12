@@ -13,10 +13,12 @@ const CATEGORY_FIELDS = [
   'color'
 ]
 
+export type categoryType = 'TO_USER' | 'TO_TWO_USERS' | 'ONLY_EXTRA';
+
 export interface CategoryModel {
   id?: number
   name: string
-  type: string
+  type: categoryType
   extra?: string
   description: string
   pictureUrl: string
