@@ -1,6 +1,6 @@
 import {db} from '../../src/config'
 import { getUserByEmailAddress } from '../../src/users/models'
-import { CreateUserRequest } from '../../src/users/objects'
+import { CreateUserRequest, User } from '../../src/users/objects'
 import request from 'supertest'
 import app from '../../src/app'
 
@@ -253,6 +253,33 @@ describe('User management', () => {
         })
       })
 
+    })
+  })
+  describe('User retrieving', () => {
+    const url = `${baseUrl}/users`
+    it('Allows user retrieving by id', async () => {
+      const expected : CreateUserRequest = {
+        fullName: 'Test User 1',
+        email: 'test+1@test.com',
+        canVote: true,
+        profileUrl: 'https://photo.url',
+        studentId: '11-11112'
+      }
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+      const userId = res.body[0].id
+      const userRes = await request(app)
+        .post(`${url}/${userId}`)
+      expect(userRes.status).toBe(200)
+
+      const user : User = userRes.body
+      expect(user).toStrictEqual({...expected, id: userId, telegramHandle: null, phoneNumber: ''})
+    })
+    it('Returns 404 when user doesnt exists', async () => {
+      const res = await request(app)
+        .post(`${url}/1331231`)
+      expect(res.status).toBe(404)
     })
   })
 })
