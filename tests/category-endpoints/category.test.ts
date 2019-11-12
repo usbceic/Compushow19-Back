@@ -487,8 +487,7 @@ describe('Category management', () => {
       expect(name).toBeDefined()
 
       const res = await request(app)
-        .post(url)
-        .send({name: name})
+        .get(`${url}/${name}`)
       expect(res.status).toBe(200)
 
       const category = {
@@ -510,15 +509,15 @@ describe('Category management', () => {
     })
 
     it('Raises a not found error on invalid name', async() => {
+      const name = 'Nonexistent name 123'
       const res = await request(app)
-        .post(url)
-        .send({name: 'Nonexistent name 123'})
+        .get(`${url}/${name}`)
       expect(res.status).toBe(404)
     })
 
-    it('Raises a bad request error if no name is sent', async() => {
+    it('Raises a not found error if no name is sent', async() => {
       const res = await request(app)
-        .post(url)
+        .get(url)
       expect(res.status).toBe(400)
     })
   })

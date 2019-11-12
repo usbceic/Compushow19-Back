@@ -1,7 +1,7 @@
 import express from 'express'
-import { asyncWrap, validateRequest, raise404, raise400 } from '../utils'
+import { asyncWrap, validateRequest, raise404 } from '../utils'
 import { listCategories, createCategory, getCategory, modifyCategory, deleteCategory } from './service'
-import { categorySchemaValidator, updateCategorySchemaValidator, categoryLookupSchemaValidator } from './validations'
+import { categorySchemaValidator, updateCategorySchemaValidator, categoryLookupSchemaValidator, categoryNameLookupSchemaValidator } from './validations'
 import { getCategoryByName } from './models'
 
 const router = express.Router()
@@ -23,11 +23,8 @@ router.get('/categories/:categoryId', validateRequest(categoryLookupSchemaValida
   }
 }))
 
-router.post('/categories/byName', asyncWrap(async (req, res) => {
-  const name = req.body.name
-  if (name === undefined) {
-    res.status(400).json(raise400())
-  }
+router.get('/categories/byName/:categoryName', validateRequest(categoryNameLookupSchemaValidator), asyncWrap(async (req, res) => {
+  const name = req.params.categoryName
   const category = await getCategoryByName(name)
   if (category === undefined) {
     res.status(404).json(raise404())

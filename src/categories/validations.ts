@@ -243,10 +243,25 @@ export const categoryLookupSchemaValidator = checkSchema({
       options: {
         checkNull: true
       },
-      errorMessage: 'id.REQUIRED',
+      errorMessage: 'id.REQUIRED'
     },
     isInt: {
       errorMessage: 'id.INT'
+    }
+  }
+})
+
+export const categoryNameLookupSchemaValidator = checkSchema({
+  categoryName: {
+    in: ['params'],
+    exists: {
+      options: {
+        checkNull: true
+      },
+      errorMessage: 'name.REQUIRED'
     },
+    isString: {
+      errorMessage: 'name.STRING'
+    }
   }
 })
