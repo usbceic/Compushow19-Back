@@ -14,11 +14,9 @@ export async function modifyCategory(id: number, request: ModifyCategoryRequest)
 }
 
 export async function getCategory(request: GetCategoryRequest) : Promise<CategoryModel> {
-  const id = request.id
-  return await getCategoryById(id)
+  return await getCategoryById(request.id)
 }
 
 export async function deleteCategory(request: DeleteCategoryRequest) : Promise<boolean> {
-  const id = request.id
-  return await deleteCategoryById(id)
+  return await deleteCategoryById(request.id)
 }
