@@ -1,7 +1,7 @@
 import express from 'express'
 import { asyncWrap, validateRequest, raise404, raise400 } from '../utils'
 import { listCategories, createCategory, getCategory, modifyCategory, deleteCategory } from './service'
-import { categorySchemaValidator, updateCategorySchemaValidator } from './validations'
+import { categorySchemaValidator, updateCategorySchemaValidator, categoryLookupSchemaValidator } from './validations'
 import { getCategoryByName } from './models'
 
 const router = express.Router()
@@ -11,8 +11,8 @@ router.get('/categories', asyncWrap(async (req, res) => {
   res.status(200).json(categories)
 }))
 
-router.get('/categories/:categoryId', asyncWrap(async (req, res) => {
-  const id = parseInt(req.params.categoryId)
+router.get('/categories/:categoryId', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
+  const id = Number(req.params.categoryId)
   const category = await getCategory({
     id: id
   })
@@ -49,7 +49,7 @@ router.post('/categories', validateRequest(categorySchemaValidator), asyncWrap(a
 }))
 
 router.put('/categories/:categoryId', validateRequest(updateCategorySchemaValidator), asyncWrap(async (req, res) => {
-  const id = parseInt(req.params.categoryId)
+  const id = Number(req.params.categoryId)
   const originalCategory = await getCategory({
     id: id
   })
@@ -67,8 +67,8 @@ router.put('/categories/:categoryId', validateRequest(updateCategorySchemaValida
   }
 }))
 
-router.delete('/categories/:categoryId', asyncWrap(async (req, res) => {
-  const id = parseInt(req.params.categoryId)
+router.delete('/categories/:categoryId', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
+  const id = Number(req.params.categoryId)
   const category = await getCategory({
     id: id
   })

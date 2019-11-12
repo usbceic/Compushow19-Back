@@ -132,6 +132,18 @@ export const categorySchemaValidator = checkSchema({
 })
 
 export const updateCategorySchemaValidator = checkSchema({
+  categoryId: {
+    in: ['params'],
+    exists: {
+      options: {
+        checkNull: true
+      },
+      errorMessage: 'id.REQUIRED',
+    },
+    isInt: {
+      errorMessage: 'id.INT'
+    }
+  },
   name: {
     optional: true,
     exists: {
@@ -222,4 +234,19 @@ export const updateCategorySchemaValidator = checkSchema({
       }
     }
   },
+})
+
+export const categoryLookupSchemaValidator = checkSchema({
+  categoryId: {
+    in: ['params'],
+    exists: {
+      options: {
+        checkNull: true
+      },
+      errorMessage: 'id.REQUIRED',
+    },
+    isInt: {
+      errorMessage: 'id.INT'
+    },
+  }
 })
