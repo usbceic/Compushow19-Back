@@ -445,12 +445,20 @@ describe('Category management', () => {
       expect(res.status).toBe(404)
     })
 
+    it('Raises a not found error on not found id', async() => {
+      const id = 0
+      const lookupUrl = `${url}/${id}`
+      const res = await request(app)
+        .get(lookupUrl)
+      expect(res.status).toBe(404)
+    })
+
     it('Raises a not found error on lookup by string', async() => {
       const id = 'test'
       const lookupUrl = `${url}/${id}`
       const res = await request(app)
         .get(lookupUrl)
-      expect(res.status).toBe(404)
+      expect(res.status).toBe(400)
     })
   })
 
@@ -604,6 +612,14 @@ describe('Category management', () => {
 
     it('Raises a not found error on invalid id', async() => {
       const id = -1
+      const lookupUrl = url + `/${id}`
+      const res = await request(app)
+        .delete(lookupUrl)
+      expect(res.status).toBe(404)
+    })
+
+    it('Raises a not found error on not found id', async() => {
+      const id = 0
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .delete(lookupUrl)
