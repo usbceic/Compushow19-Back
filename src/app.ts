@@ -32,7 +32,7 @@ app.use('/health', (req, res) => {
   res.json({ status: 'UP' })
 })
 
-app.use('/v1/api', userRoutes)
+app.use('/v1/api/users', userRoutes)
 app.use('/v1/api', categoryRoutes)
 
 app.use(errorHandler)
