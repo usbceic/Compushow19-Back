@@ -722,11 +722,7 @@ describe('Category management', () => {
         .delete(lookupUrl)
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
 
-      expect(res.status).toBe(200)
-      expect(res.body.id).toBe(id)
-
-      const category = await getCategoryById(id)
-      expect(category).toBeUndefined()
+      expect(res.status).toBe(403)
     })
 
 
