@@ -4,6 +4,7 @@ import winston from 'winston'
 import errorHandler from './errorHandling/errorHandler'
 import userRoutes from './users/routes'
 import categoryRoutes from './categories/routes'
+import nominationRoutes from './nominations/routes'
 import { NODE_ENV } from './config'
 import passport from 'passport'
 import {Strategy} from 'passport-http-bearer'
@@ -54,6 +55,7 @@ app.use('/health', (req, res) => {
 
 app.use('/v1/api/users', passport.authenticate('bearer', { session: false }), userRoutes)
 app.use('/v1/api/categories', passport.authenticate('bearer', { session: false }), categoryRoutes)
+app.use('/v1/api/nominations', passport.authenticate('bearer', { session: false }), nominationRoutes)
 
 app.use(errorHandler)
 
