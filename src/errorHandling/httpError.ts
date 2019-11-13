@@ -48,11 +48,11 @@ export class UnauthorizedError extends HttpError {
 }
 
 export class NotFoundError extends HttpError {
-  constructor() {
+  constructor(message: string = 'The requested resource was not found') {
     super()
     this.status = 404
     this.title = 'Not found'
-    this.message = 'The requested resource was not found'
+    this.message = message
     this.userMessage = 'Not found'
   }
 }

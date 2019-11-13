@@ -26,6 +26,10 @@ export async function getUserByStudentId(studentId: string) : Promise<UserModel>
   return await db(TABLE_NAME).where('studentId', studentId).first()
 }
 
+export async function getUserByUserId(id: number) : Promise<UserModel> {
+  return await db(TABLE_NAME).where('id', id).first()
+}
+
 
 export async function existsByEmailAddress(email: string) : Promise<boolean> {
   return (await getUserByEmailAddress(email)) !== undefined

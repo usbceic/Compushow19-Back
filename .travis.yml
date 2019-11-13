@@ -14,6 +14,7 @@ install:
   - sed -i '/^PG_CONNECTION_STRING/d' .test.env
   - echo 'PG_CONNECTION_STRING=postgres://postgres:@localhost:5432/local' >> .test.env
   - cp .test.env .env
+  - echo 'NODE_ENV=test' >> .env
   - npm i
 script:
   - npm test -- --detectOpenHandles
