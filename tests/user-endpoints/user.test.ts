@@ -270,7 +270,7 @@ describe('User management', () => {
         .send(expected)
       const userId = res.body[0].id
       const userRes = await request(app)
-        .post(`${url}/${userId}`)
+        .get(`${url}/${userId}`)
       expect(userRes.status).toBe(200)
 
       const user : User = userRes.body
@@ -278,7 +278,7 @@ describe('User management', () => {
     })
     it('Returns 404 when user doesnt exists', async () => {
       const res = await request(app)
-        .post(`${url}/1331231`)
+        .get(`${url}/1331231`)
       expect(res.status).toBe(404)
     })
   })
