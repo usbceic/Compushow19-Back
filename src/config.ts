@@ -18,8 +18,6 @@ const req = (envVar: string) : string => {
 
 const setDefault = (envVar: string, defValue: string) : string => process.env[envVar] || defValue
 
-
-process.env
 export const PORT : string = setDefault('PORT', '8080')
 export const NODE_ENV : string = req('NODE_ENV')
 export const PG_CONNECTION_STRING : string = req('PG_CONNECTION_STRING')
