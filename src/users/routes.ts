@@ -1,6 +1,6 @@
 import express from 'express'
 import { asyncWrap, validateRequest } from '../utils'
-import { createUser, getUser } from './service'
+import { createUser, getUser, getAllUsers } from './service'
 import { userSchemaValidator } from './validations'
 import { isAdmin } from '../auth/auth'
 import { RegisteredUser } from './objects'
@@ -24,6 +24,11 @@ router.post('', validateRequest(userSchemaValidator), asyncWrap(async (req, res)
 
 router.get('/me', asyncWrap(async (req, res) => {
   res.status(200).json(req.user)
+}))
+
+router.get('/all', asyncWrap(async (req, res) => {
+  const users = await getAllUsers()
+  res.status(200).json(users)
 }))
 
 router.get('/:userId([0-9]+)', asyncWrap(async (req, res) => {

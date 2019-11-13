@@ -46,3 +46,7 @@ export async function insertUser(user: UserModel) : Promise<UserModel> {
   return await db(TABLE_NAME)
     .returning(USER_FIELDS).insert(user)
 }
+
+export async function getAll() : Promise<UserModel[]> {
+  return await db(TABLE_NAME).select()
+}
