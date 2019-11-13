@@ -22,7 +22,7 @@ export async function getUserCategoryNomination(request: UserCategoryLookupReque
 }
 
 export async function createNomination(request: CreateNominationRequest) : Promise<NominationModel> {
-  return await insertNomination(request)
+  return await insertNomination({...request, userId: request.userId!})
 }
 
 export async function deleteNomination(request: LookupNominationRequest) : Promise<boolean> {

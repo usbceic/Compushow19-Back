@@ -1,7 +1,7 @@
 import { NominationModel } from './models'
 
 export interface CreateNominationRequest {
-  userId: number
+  userId?: number
   categoryId: number
   mainNominee?: number
   auxNominee?: number
