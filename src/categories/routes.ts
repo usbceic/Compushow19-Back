@@ -6,7 +6,7 @@ import { getCategoryByName } from './models'
 
 const router = express.Router()
 
-router.get('/categories', asyncWrap(async (req, res) => {
+router.get('/categories', asyncWrap(async (_, res) => {
   const categories = await listCategories()
   res.status(200).json(categories)
 }))
