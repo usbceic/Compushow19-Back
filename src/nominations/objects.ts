@@ -12,6 +12,10 @@ export interface LookupNominationRequest {
   id: number
 }
 
+export interface CategoryLookupNominationRequest {
+  categoryId: number
+}
+
 export interface UserLookupNominationRequest {
   userId: number
 }

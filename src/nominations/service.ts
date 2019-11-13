@@ -1,5 +1,5 @@
-import { NominationModel, getAllNominations, getNominationById, getNominationsByUserId, getNominationByUserAndCategory, insertNomination, deleteNominationById } from './models'
-import { CreateNominationRequest, LookupNominationRequest, UserLookupNominationRequest, UserCategoryLookupRequest } from './objects'
+import { NominationModel, getAllNominations, getNominationById, getNominationsByUserId, getNominationsByCategoryId, getNominationByUserAndCategory, insertNomination, deleteNominationById } from './models'
+import { CreateNominationRequest, LookupNominationRequest, UserLookupNominationRequest, CategoryLookupNominationRequest, UserCategoryLookupRequest } from './objects'
 
 export async function listNominations() : Promise<[NominationModel]> {
   return await getAllNominations()
@@ -7,6 +7,10 @@ export async function listNominations() : Promise<[NominationModel]> {
 
 export async function getNomination(request: LookupNominationRequest) : Promise<NominationModel> {
   return await getNominationById(request.id)
+}
+
+export async function getCategoryNominations(request: CategoryLookupNominationRequest) : Promise<[NominationModel]> {
+  return await getNominationsByCategoryId(request.categoryId)
 }
 
 export async function getUserNominations(request: UserLookupNominationRequest) : Promise<[NominationModel]> {
