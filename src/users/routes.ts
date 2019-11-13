@@ -3,13 +3,13 @@ import { asyncWrap, validateRequest } from '../utils'
 import { createUser, getUser } from './service'
 import { userSchemaValidator } from './validations'
 import { isAdmin } from '../auth/auth'
-import { User } from './objects'
+import { RegisteredUser } from './objects'
 import { UnauthorizedError } from '../errorHandling/httpError'
 
 const router = express.Router()
 
 router.post('', validateRequest(userSchemaValidator), asyncWrap(async (req, res) => {
-  if (!isAdmin(req.user as User)) {
+  if (!isAdmin(req.user as RegisteredUser)) {
     throw new UnauthorizedError()
   }
   const user = await createUser({

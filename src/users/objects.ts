@@ -9,3 +9,7 @@ export interface CreateUserRequest {
 }
 
 export interface User extends UserModel {}
+
+export interface RegisteredUser extends User {
+  id: number
+}

@@ -30,13 +30,16 @@ export async function getUserByUserId(id: number) : Promise<UserModel> {
   return await db(TABLE_NAME).where('id', id).first()
 }
 
-
 export async function existsByEmailAddress(email: string) : Promise<boolean> {
   return (await getUserByEmailAddress(email)) !== undefined
 }
 
 export async function existsByStudentId(studentId: string) : Promise<boolean> {
   return (await getUserByStudentId(studentId)) !== undefined
+}
+
+export async function existsByUserId(id: number) : Promise<boolean> {
+  return (await getUserByUserId(id)) !== undefined
 }
 
 export async function insertUser(user: UserModel) : Promise<UserModel> {

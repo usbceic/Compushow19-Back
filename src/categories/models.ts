@@ -25,11 +25,15 @@ export interface CategoryModel {
   color: string
 }
 
-export async function getCategoryByName(name: string) : Promise<CategoryModel> {
+export interface SavedCategoryModel extends CategoryModel {
+  id: number
+}
+
+export async function getCategoryByName(name: string) : Promise<SavedCategoryModel> {
   return await db(TABLE_NAME).where('name', name).first()
 }
 
-export async function getCategoryById(id: number) : Promise<CategoryModel> {
+export async function getCategoryById(id: number) : Promise<SavedCategoryModel> {
   return await db(TABLE_NAME).where('id', id).first()
 }
 
@@ -37,12 +41,16 @@ export async function categoryExistsByName(name: string) : Promise<boolean> {
   return (await getCategoryByName(name)) !== undefined
 }
 
-export async function insertCategory(category: CategoryModel) : Promise<CategoryModel> {
+export async function categoryExistsById(id: number) : Promise<boolean> {
+  return (await getCategoryById(id)) !== undefined
+}
+
+export async function insertCategory(category: CategoryModel) : Promise<SavedCategoryModel> {
   return await db(TABLE_NAME)
     .returning(CATEGORY_FIELDS).insert(category)
 }
 
-export async function updateCategory(id: number, category: ModifyCategoryRequest) : Promise<CategoryModel> {
+export async function updateCategory(id: number, category: ModifyCategoryRequest) : Promise<SavedCategoryModel> {
   await db(TABLE_NAME).where('id', id).update(category)
   return await getCategoryById(id)
 }
@@ -51,10 +59,10 @@ export async function deleteCategoryById(id: number) : Promise<boolean> {
   return await db(TABLE_NAME).where('id', id).del()
 }
 
-export async function getAllCategories() : Promise<[CategoryModel]> {
+export async function getAllCategories() : Promise<[SavedCategoryModel]> {
   return await db(TABLE_NAME)
     .select(CATEGORY_FIELDS)
     .then((categories) => {
-      return <[CategoryModel]>categories
+      return <[SavedCategoryModel]>categories
     })
 }

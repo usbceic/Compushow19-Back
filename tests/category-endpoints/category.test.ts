@@ -503,7 +503,7 @@ describe('Category management', () => {
       const res = await request(app)
         .get(lookupUrl)
         .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
-      expect(res.status).toBe(400)
+      expect(res.status).toBe(404)
     })
   })
 
@@ -651,6 +651,16 @@ describe('Category management', () => {
 
     it('Raises a not found error on invalid id', async() => {
       const id = -1
+      const lookupUrl = url + `/${id}`
+      const res = await request(app)
+        .put(lookupUrl)
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+
+      expect(res.status).toBe(404)
+    })
+
+    it('Raises a not found error on not found id', async() => {
+      const id = 0
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .put(lookupUrl)
