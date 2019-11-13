@@ -1,4 +1,5 @@
 import * as Knex from 'knex'
+import { createUser } from '../src/users/service'
 
 export async function seed(knex: Knex): Promise<any> {
   // Deletes ALL existing entries
@@ -9,4 +10,20 @@ export async function seed(knex: Knex): Promise<any> {
   TABLE_NAMES.forEach(async (name) => {
     await knex(name).del()
   })
+
+  await createUser({
+    canVote: true,
+    email: 'admin@test.com',
+    fullName: 'Admin 1',
+    profileUrl: 'https://google.com',
+    studentId: 'id-1'
+  })
+  await createUser({
+    canVote: true,
+    email: 'user@test.com',
+    fullName: 'User 1',
+    profileUrl: 'https://google.com',
+    studentId: 'id-2'
+  })
+
 }
