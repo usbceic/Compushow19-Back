@@ -7,7 +7,7 @@ import categoryRoutes from './categories/routes'
 import { NODE_ENV } from './config'
 import passport from 'passport'
 import {Strategy} from 'passport-http-bearer'
-import authorizeWithGoogle from './auth'
+import authorizeWithGoogle from './auth/auth'
 import { UnauthorizedError } from './errorHandling/httpError'
 
 const BearerStrategy = Strategy

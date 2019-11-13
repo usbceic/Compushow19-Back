@@ -1,8 +1,8 @@
 import { OAuth2Client } from 'google-auth-library'
-import { GOOGLE_SIGN_IN_CLIENT_ID, GOOGLE_EMAIL_DOMAIN } from './config'
-import { UnauthorizedError } from './errorHandling/httpError'
-import { User } from './users/objects'
-import { getUserByEmail } from './users/service'
+import { GOOGLE_SIGN_IN_CLIENT_ID, GOOGLE_EMAIL_DOMAIN, ADMINS } from '../config'
+import { UnauthorizedError } from '../errorHandling/httpError'
+import { User } from '../users/objects'
+import { getUserByEmail } from '../users/service'
 
 const client = new OAuth2Client(GOOGLE_SIGN_IN_CLIENT_ID)
 
@@ -24,3 +24,7 @@ async function authorizeWithGoogle(token: string) : Promise<User> {
 }
 
 export default authorizeWithGoogle
+
+export function isAdmin(user: User) {
+  return ADMINS.includes(user.email)
+}
