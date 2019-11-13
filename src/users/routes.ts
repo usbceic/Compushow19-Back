@@ -5,6 +5,7 @@ import { userSchemaValidator } from './validations'
 import { isAdmin } from '../auth/auth'
 import { RegisteredUser } from './objects'
 import { UnauthorizedError } from '../errorHandling/httpError'
+import { authorizeWithGoogle } from '../auth/auth'
 
 const router = express.Router()
 
@@ -24,6 +25,11 @@ router.post('', validateRequest(userSchemaValidator), asyncWrap(async (req, res)
 
 router.get('/me', asyncWrap(async (req, res) => {
   res.status(200).json(req.user)
+}))
+
+router.get('/byToken/:userToken', asyncWrap(async (req, res) => {
+  const user = await authorizeWithGoogle(req.params.userToken)
+  res.status(200).json(user)
 }))
 
 router.get('/:userId([0-9]+)', asyncWrap(async (req, res) => {
