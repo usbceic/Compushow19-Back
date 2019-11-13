@@ -15,8 +15,8 @@ export interface NominationModel {
   id?: number
   userId: number
   categoryId: number
-  mainNominee: number
-  auxNominee: number
+  mainNominee?: number
+  auxNominee?: number
   extra?: string
 }
 
