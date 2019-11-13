@@ -4,12 +4,12 @@ import { listCategories, createCategory, getCategory, modifyCategory, deleteCate
 import { categorySchemaValidator, updateCategorySchemaValidator, categoryLookupSchemaValidator, categoryNameLookupSchemaValidator } from './validations'
 import { getCategoryByName } from './models'
 import { isAdmin } from '../auth/auth'
-import { User } from '../users/objects'
+import { RegisteredUser } from '../users/objects'
 import { UnauthorizedError } from '../errorHandling/httpError'
 
 const router = express.Router()
 
-router.get('', asyncWrap(async (req, res) => {
+router.get('', asyncWrap(async (_, res) => {
   const categories = await listCategories()
   res.status(200).json(categories)
 }))
@@ -24,7 +24,7 @@ router.get('/byName', validateRequest(categoryNameLookupSchemaValidator), asyncW
   }
 }))
 
-router.get('/:categoryId', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
+router.get('/:categoryId([0-9]+)', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
   const id = Number(req.params.categoryId)
   const category = await getCategory({
     id: id
@@ -37,7 +37,7 @@ router.get('/:categoryId', validateRequest(categoryLookupSchemaValidator), async
 }))
 
 router.post('', validateRequest(categorySchemaValidator), asyncWrap(async (req, res) => {
-  if (!isAdmin(req.user as User)) {
+  if (!isAdmin(req.user as RegisteredUser)) {
     throw new UnauthorizedError()
   }
 
@@ -52,8 +52,8 @@ router.post('', validateRequest(categorySchemaValidator), asyncWrap(async (req, 
   res.status(201).json(category)
 }))
 
-router.put('/:categoryId', validateRequest(updateCategorySchemaValidator), asyncWrap(async (req, res) => {
-  if (!isAdmin(req.user as User)) {
+router.put('/:categoryId([0-9]+)', validateRequest(updateCategorySchemaValidator), asyncWrap(async (req, res) => {
+  if (!isAdmin(req.user as RegisteredUser)) {
     throw new UnauthorizedError()
   }
 
@@ -75,8 +75,8 @@ router.put('/:categoryId', validateRequest(updateCategorySchemaValidator), async
   }
 }))
 
-router.delete('/:categoryId', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
-  if (!isAdmin(req.user as User)) {
+router.delete('/:categoryId([0-9]+)', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
+  if (!isAdmin(req.user as RegisteredUser)) {
     throw new UnauthorizedError()
   }
 
