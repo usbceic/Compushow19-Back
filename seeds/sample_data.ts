@@ -13,15 +13,15 @@ export async function seed(knex: Knex): Promise<any> {
 
   await createUser({
     canVote: true,
-    email: 'a@test.com',
+    email: 'admin@test.com',
     fullName: 'Admin 1',
     profileUrl: 'https://google.com',
     studentId: 'id-1'
   })
   await createUser({
     canVote: true,
-    email: 'b@test.com',
-    fullName: 'Admin 1',
+    email: 'user@test.com',
+    fullName: 'User 1',
     profileUrl: 'https://google.com',
     studentId: 'id-2'
   })

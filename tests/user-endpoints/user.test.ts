@@ -7,12 +7,17 @@ import request from 'supertest'
 import app from '../../src/app'
 jest.mock('google-auth-library')
 
+const ADMIN_TOKEN = 'admin_token'
+const NON_ADMIN_TOKEN = 'user_token'
+
 beforeAll(async () => {
-  OAuth2Client.prototype.verifyIdToken = async function(): Promise<any> {
+  OAuth2Client.prototype.verifyIdToken = async function(options: any): Promise<any> {
     return {
       getPayload() {
         return {
-          email: 'a@test.com'
+          email: options.idToken === ADMIN_TOKEN
+            ? 'admin@test.com'
+            : 'user@test.com'
         }
       }
     }
@@ -39,7 +44,7 @@ describe('User management', () => {
       }
       const res = await request(app)
         .post(url)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         .send(expected)
       expect(res.status).toBe(201)
       const user = await getUserByEmailAddress('test@test.com')
@@ -49,11 +54,25 @@ describe('User management', () => {
       expect(user.profileUrl).toBe(expected.profileUrl)
       expect(user.studentId).toBe(expected.studentId)
     })
+    it('Rejects to create user if token is not for admin', async () => {
+      const expected : CreateUserRequest = {
+        fullName: 'Test User',
+        email: 'test5@test.com',
+        canVote: true,
+        profileUrl: 'https://photo.url',
+        studentId: '11-111115'
+      }
+      const res = await request(app)
+        .post(url)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+        .send(expected)
+      expect(res.status).toBe(403)
+    })
     describe('Data validation', () => {
       async function runTest(payload: any, expectedError: any) {
         const response = await request(app)
           .post(url)
-          .set('Authorization', 'Bearer token')
+          .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
           .send(payload)
         expect(response.status).toBe(400)
         expect(response.body.errors).toContainEqual(expectedError)
@@ -152,7 +171,7 @@ describe('User management', () => {
         it('verifies that the email is not already taken', async () => {
           await request(app)
             .post(url)
-            .set('Authorization', 'Bearer token')
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .send({
               ...baseRequest,
               email: 'good@test.com',
@@ -199,7 +218,7 @@ describe('User management', () => {
         }
         it('should allow creating an user without profileUrl', async () => {
           await request(app).post(url)
-            .set('Authorization', 'Bearer token')
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .send({...baseRequest, email: 'test2@test.com', studentId: '33-33333'})
             .expect(201)
         })
@@ -256,7 +275,7 @@ describe('User management', () => {
         it('verifies that the studentId is not already taken', async () => {
           await request(app)
             .post(url)
-            .set('Authorization', 'Bearer token')
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
             .send({
               ...baseRequest,
               studentId: '22-22222'
@@ -284,12 +303,12 @@ describe('User management', () => {
       }
       const res = await request(app)
         .post(url)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         .send(expected)
       const userId = res.body[0].id
       const userRes = await request(app)
         .get(`${url}/${userId}`)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(userRes.status).toBe(200)
 
       const user : User = userRes.body
@@ -298,7 +317,7 @@ describe('User management', () => {
     it('Returns 404 when user doesnt exists', async () => {
       const res = await request(app)
         .get(`${url}/1331231`)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(res.status).toBe(404)
     })
   })

@@ -3,6 +3,9 @@ import { asyncWrap, validateRequest, raise404 } from '../utils'
 import { listCategories, createCategory, getCategory, modifyCategory, deleteCategory } from './service'
 import { categorySchemaValidator, updateCategorySchemaValidator, categoryLookupSchemaValidator, categoryNameLookupSchemaValidator } from './validations'
 import { getCategoryByName } from './models'
+import { isAdmin } from '../auth/auth'
+import { User } from '../users/objects'
+import { UnauthorizedError } from '../errorHandling/httpError'
 
 const router = express.Router()
 
@@ -34,6 +37,10 @@ router.get('/:categoryId', validateRequest(categoryLookupSchemaValidator), async
 }))
 
 router.post('', validateRequest(categorySchemaValidator), asyncWrap(async (req, res) => {
+  if (!isAdmin(req.user as User)) {
+    throw new UnauthorizedError()
+  }
+
   const category = await createCategory({
     name: req.body.name,
     type: req.body.type,
@@ -46,6 +53,10 @@ router.post('', validateRequest(categorySchemaValidator), asyncWrap(async (req, 
 }))
 
 router.put('/:categoryId', validateRequest(updateCategorySchemaValidator), asyncWrap(async (req, res) => {
+  if (!isAdmin(req.user as User)) {
+    throw new UnauthorizedError()
+  }
+
   const id = Number(req.params.categoryId)
   const originalCategory = await getCategory({
     id: id
@@ -65,6 +76,10 @@ router.put('/:categoryId', validateRequest(updateCategorySchemaValidator), async
 }))
 
 router.delete('/:categoryId', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
+  if (!isAdmin(req.user as User)) {
+    throw new UnauthorizedError()
+  }
+
   const id = Number(req.params.categoryId)
   const category = await getCategory({
     id: id

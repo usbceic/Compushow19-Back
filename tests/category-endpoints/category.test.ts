@@ -6,17 +6,21 @@ import { getCategoryByName, getCategoryById } from '../../src/categories/models'
 import { OAuth2Client } from 'google-auth-library'
 jest.mock('google-auth-library')
 
+const ADMIN_TOKEN = 'admin_token'
+const NON_ADMIN_TOKEN = 'user_token'
+
 beforeAll(async () => {
-  OAuth2Client.prototype.verifyIdToken = async function(): Promise<any> {
+  OAuth2Client.prototype.verifyIdToken = async function(options: any): Promise<any> {
     return {
       getPayload() {
         return {
-          email: 'a@test.com'
+          email: options.idToken === ADMIN_TOKEN
+            ? 'admin@test.com'
+            : 'user@test.com'
         }
       }
     }
   }
-
   await db.migrate.latest()
   return await db.seed.run()
 })
@@ -35,7 +39,7 @@ describe('Category management', () => {
       await db.seed.run()
       const emptyCategoriesResponse = await request(app)
         .get(url)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(emptyCategoriesResponse.status).toBe(200)
       expect(emptyCategoriesResponse.body).toStrictEqual([])
     })
@@ -57,7 +61,7 @@ describe('Category management', () => {
       const res = await request(app)
         .post(url)
         .send(expected)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(res.status).toBe(201)
 
       const category = await getCategoryByName('Test Category')
@@ -68,13 +72,29 @@ describe('Category management', () => {
       expect(category.extra).toBe(expected.extra)
       expect(category.color).toBe(expected.color)
     })
+    it('Rejects for category creation when user is not an admin', async () => {
+      const expected : CreateCategoryRequest = {
+        name: 'Test Category for non admin',
+        type: 'TO_USER',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(403)
+    })
 
     describe('Data validation', () => {
       async function runTest(payload: any, expectedError: any) {
         const response = await request(app)
           .post(url)
           .send(payload)
-          .set('Authorization', 'Bearer token')
+          .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
         expect(response.status).toBe(400)
         expect(response.body.errors).toContainEqual(expectedError)
@@ -138,7 +158,7 @@ describe('Category management', () => {
           await request(app)
             .post(url)
             .send(extraRequest)
-            .set('Authorization', 'Bearer token')
+            .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
           await runTest({
             ...baseResponse,
@@ -424,7 +444,7 @@ describe('Category management', () => {
       const resCreation = await request(app)
         .post(url)
         .send(expected)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(resCreation.status).toBe(201)
 
@@ -434,7 +454,7 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .get(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(200)
 
@@ -462,7 +482,7 @@ describe('Category management', () => {
       const lookupUrl = `${url}/${id}`
       const res = await request(app)
         .get(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(404)
     })
@@ -472,7 +492,7 @@ describe('Category management', () => {
       const lookupUrl = `${url}/${id}`
       const res = await request(app)
         .get(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(404)
     })
@@ -482,7 +502,7 @@ describe('Category management', () => {
       const lookupUrl = `${url}/${id}`
       const res = await request(app)
         .get(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(res.status).toBe(400)
     })
   })
@@ -505,7 +525,7 @@ describe('Category management', () => {
       const creationRes = await request(app)
         .post(creationUrl)
         .send(expected)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(creationRes.status).toBe(201)
 
@@ -514,7 +534,7 @@ describe('Category management', () => {
 
       const res = await request(app)
         .get(`${url}?name=${name}`)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(200)
 
@@ -540,7 +560,7 @@ describe('Category management', () => {
       const name = 'Nonexistent name 123'
       const res = await request(app)
         .get(`${url}?name=${name}`)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(404)
     })
@@ -548,7 +568,7 @@ describe('Category management', () => {
     it('Raises a bad request error if no name is sent', async() => {
       const res = await request(app)
         .get(url)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(400)
     })
@@ -556,7 +576,7 @@ describe('Category management', () => {
     it('Raises a bad request error if empty name is sent', async() => {
       const res = await request(app)
         .get(`${url}?name=`)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(400)
     })
@@ -579,7 +599,7 @@ describe('Category management', () => {
       const resCreation = await request(app)
         .post(url)
         .send(original)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(resCreation.status).toBe(201)
 
@@ -597,7 +617,7 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .put(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
         .send(expected)
       expect(res.status).toBe(200)
 
@@ -609,12 +629,32 @@ describe('Category management', () => {
       expect(res.body.color).toBe(expected.color)
     })
 
+    it('Rejects for a category to be edited if user is not an admin', async () => {
+      await db.seed.run()
+      const original : CreateCategoryRequest = {
+        name: 'Testing Category to Edit',
+        type: 'TO_USER',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      }
+
+      const resCreation = await request(app)
+        .post(url)
+        .send(original)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+
+      expect(resCreation.status).toBe(403)
+    })
+
+
     it('Raises a not found error on invalid id', async() => {
       const id = -1
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .put(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(404)
     })
@@ -637,7 +677,7 @@ describe('Category management', () => {
       const resCreation = await request(app)
         .post(url)
         .send(expected)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(resCreation.status).toBe(201)
 
@@ -647,7 +687,7 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .delete(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(200)
       expect(res.body.id).toBe(id)
@@ -656,12 +696,46 @@ describe('Category management', () => {
       expect(category).toBeUndefined()
     })
 
+    it('Reject for a category to be deleted if token user is not an admin', async () => {
+      await db.seed.run()
+      const expected : CreateCategoryRequest = {
+        name: 'Testing Category to Delete',
+        type: 'TO_USER',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      }
+
+      const resCreation = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+
+      expect(resCreation.status).toBe(201)
+
+      const id = resCreation.body[0].id
+      expect(id).toBeDefined()
+
+      const lookupUrl = url + `/${id}`
+      const res = await request(app)
+        .delete(lookupUrl)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+
+      expect(res.status).toBe(200)
+      expect(res.body.id).toBe(id)
+
+      const category = await getCategoryById(id)
+      expect(category).toBeUndefined()
+    })
+
+
     it('Raises a not found error on invalid id', async() => {
       const id = -1
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .delete(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(404)
     })
@@ -671,7 +745,7 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .delete(lookupUrl)
-        .set('Authorization', 'Bearer token')
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
 
       expect(res.status).toBe(404)
     })
