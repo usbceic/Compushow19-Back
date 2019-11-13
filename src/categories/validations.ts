@@ -51,7 +51,7 @@ export const categorySchemaValidator = checkSchema({
       }
     },
     isIn: {
-      options: ['TO_USER', 'TO_TWO_USERS', 'ONLY_EXTRA'],
+      options: ['TO_USER', 'TO_USER_WITH_EXTRA', 'TO_TWO_USERS', 'ONLY_EXTRA'],
       errorMessage: 'type.INVALID_VALUE'
     },
   },
