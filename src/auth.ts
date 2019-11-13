@@ -15,7 +15,6 @@ async function authorizeWithGoogle(token: string) : Promise<User> {
   if (payload === undefined) {
     throw new UnauthorizedError()
   }
-  console.log(payload)
   const email: string = payload.email || ''
   if (!email.endsWith(GOOGLE_EMAIL_DOMAIN)) {
     throw new UnauthorizedError()
