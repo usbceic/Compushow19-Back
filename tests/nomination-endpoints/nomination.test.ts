@@ -165,6 +165,356 @@ describe('Nomination management', () => {
       expect(nomination.extra).toBe(expected.extra)
     })
 
+    it('Allows nomination creation for a TO_USER category with main nominee and extra', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test CategoryToUserMNE',
+        type: 'TO_USER',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test CategoryToUserMNE')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        mainNominee: nominee.id,
+        extra: 'test'
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(201)
+    })
+
+    it('Rejects nomination creation for a TO_USER category without main nominee', async () => {
+      await insertCategory({
+        name: 'Test CategoryToUserMN',
+        type: 'TO_USER',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test CategoryToUserMN')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Rejects nomination creation for a TO_USER category with aux nominee', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test CategoryToUserAN',
+        type: 'TO_USER',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test CategoryToUserAN')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        auxNominee: nominee.id
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Allows nomination creation for a TO_TWO_USERS category with main nominee and aux nominee', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      const nominee2 = await getUserByStudentId('id-2')
+      await insertCategory({
+        name: 'Test Category2usersMA',
+        type: 'TO_TWO_USERS',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test Category2usersMA')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        mainNominee: nominee.id,
+        auxNominee: nominee2.id
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(201)
+    })
+
+    it('Allows nomination creation for a TO_TWO_USERS category with main nominee and aux nominee and extra', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      const nominee2 = await getUserByStudentId('id-2')
+      await insertCategory({
+        name: 'Test Category2usersMAE',
+        type: 'TO_TWO_USERS',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test Category2usersMAE')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        mainNominee: nominee.id,
+        auxNominee: nominee2.id,
+        extra: 'test'
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(201)
+    })
+
+    it('Rejects nomination creation for a TO_TWO_USERS category with main nominee and without aux nominee', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test Category2usersFail1',
+        type: 'TO_TWO_USERS',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test Category2usersFail1')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        mainNominee: nominee.id,
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Rejects nomination creation for a TO_TWO_USERS category without main nominee and with aux nominee', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test Category2usersFail2',
+        type: 'TO_TWO_USERS',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test Category2usersFail2')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        auxNominee: nominee.id,
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Rejects nomination creation for a TO_TWO_USERS category with only extra', async () => {
+      await insertCategory({
+        name: 'Test Category2usersFail3',
+        type: 'TO_TWO_USERS',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test Category2usersFail3')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        extra: 'test1'
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Allows nomination creation for a ONLY_EXTRA category with only extra', async () => {
+      await insertCategory({
+        name: 'Test CategoryExtraGood',
+        type: 'ONLY_EXTRA',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test CategoryExtraGood')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        extra: 'yummy yummy'
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(201)
+    })
+
+    it('Rejects nomination creation for a ONLY_EXTRA category without extra', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test CategoryExtra',
+        type: 'ONLY_EXTRA',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test CategoryExtra')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        mainNominee: nominee.id
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Rejects nomination creation for a ONLY_EXTRA category with main nominee', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test CategoryExtraMainNominee',
+        type: 'ONLY_EXTRA',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test CategoryExtraMainNominee')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        extra: 'test extra',
+        mainNominee: nominee.id
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Rejects nomination creation for a ONLY_EXTRA category with aux nominee', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test CategoryExtraAuxNominee',
+        type: 'ONLY_EXTRA',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test CategoryExtraAuxNominee')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        extra: 'test extra',
+        auxNominee: nominee.id
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Allows nomination creation for a TO_USER_WITH_EXTRA category with main nominee and extra', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test touserextraMNE',
+        type: 'TO_USER_WITH_EXTRA',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test touserextraMNE')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        mainNominee: nominee.id,
+        extra: 'test'
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(201)
+    })
+
+    it('Rejects nomination creation for a TO_USER_WITH_EXTRA category with aux nominee and extra', async () => {
+      const nominee = await getUserByStudentId('id-1')
+      await insertCategory({
+        name: 'Test touserextraMNE2',
+        type: 'TO_USER_WITH_EXTRA',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test touserextraMNE2')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        auxNominee: nominee.id,
+        extra: 'test'
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
+    it('Rejects nomination creation for a TO_USER_WITH_EXTRA category without main nominee', async () => {
+      await insertCategory({
+        name: 'Test touserextraMNE3',
+        type: 'TO_USER_WITH_EXTRA',
+        pictureUrl: 'http://google.com',
+        description: 'Sample description',
+        extra: 'Extra information',
+        color: '#000000'
+      })
+      const category = await getCategoryByName('Test touserextraMNE3')
+      const expected : CreateNominationRequest = {
+        categoryId: category.id,
+        extra: 'test'
+      }
+
+      const res = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(400)
+    })
+
     it('Rejects nomination creation with no authorization', async () => {
       const nominee = await getUserByStudentId('id-1')
       await insertCategory({
