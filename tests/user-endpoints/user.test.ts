@@ -320,5 +320,13 @@ describe('User management', () => {
         .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(res.status).toBe(404)
     })
+    it('Allows user retrieving by active token', async () => {
+      const res = await request(app)
+        .get(`${url}/me`)
+        .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+      expect(res.status).toBe(200)
+      const user : User = res.body
+      expect(user.email).toStrictEqual('admin@test.com')
+    })
   })
 })
