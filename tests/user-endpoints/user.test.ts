@@ -129,7 +129,7 @@ describe('User management', () => {
         it('verifies that the field doesn\'t exceed 50 chars', async () => {
           await runTest({
             ...baseRequest,
-            email: 'very-very-very-very-long-long-long@email.email.comm'
+            email: 'very-very-very-very-long-long-long-long-long@test.com'
           }, {
             field: 'email',
             validationCode: 'email.LENGTH_NOT_VALID'
@@ -140,11 +140,11 @@ describe('User management', () => {
             .post(url)
             .send({
               ...baseRequest,
-              email: 'good@email.com',
+              email: 'good@test.com',
               studentId: '22-22222'
             })
           await runTest({
-            ...baseRequest, email: 'good@email.com'
+            ...baseRequest, email: 'good@test.com'
           }, {
             field: 'email',
             validationCode: 'email.UNIQUE'
@@ -155,7 +155,7 @@ describe('User management', () => {
       describe('Returns 400 when `canVote` is invalid', () => {
         const baseRequest = {
           fullName: 'Test Name',
-          email: 'test1@test1.com',
+          email: 'test1@test.com',
           profileUrl: 'https://photo.url',
           studentId: '11-11111'
         }
@@ -178,13 +178,13 @@ describe('User management', () => {
       describe('Returns 400 when `profileUrl` is invalid', () => {
         const baseRequest = {
           fullName: 'Test Name',
-          email: 'test1@test1.com',
+          email: 'test1@test.com',
           canVote: true,
           studentId: '11-11111'
         }
         it('should allow creating an user without profileUrl', async () => {
           await request(app).post(url)
-            .send({...baseRequest, email: 'test2@test2.com', studentId: '33-33333'})
+            .send({...baseRequest, email: 'test2@test.com', studentId: '33-33333'})
             .expect(201)
         })
         it('verifies that the field is an string', async () => {
@@ -202,7 +202,7 @@ describe('User management', () => {
           fullName: 'Test Name',
           canVote: true,
           profileUrl: 'https://photo.url',
-          email: 'test3@test3.com'
+          email: 'test3@test.com'
         }
         it('verifies that the field is in the request', async () => {
           await runTest(baseRequest, {
@@ -245,7 +245,7 @@ describe('User management', () => {
               studentId: '22-22222'
             })
           await runTest({
-            ...baseRequest, studentId: '22-22222', email: 'test4@test4.com'
+            ...baseRequest, studentId: '22-22222', email: 'test4@test.com'
           }, {
             field: 'studentId',
             validationCode: 'studentId.UNIQUE'
