@@ -328,5 +328,13 @@ describe('User management', () => {
       const user : User = res.body
       expect(user.email).toStrictEqual('admin@test.com')
     })
+    it('Allows getting all users', async () => {
+      const res = await request(app)
+        .get(`${url}/all`)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res.status).toBe(200)
+      const users : User[] = res.body
+      expect(users.length > 0).toBe(true)
+    })
   })
 })
