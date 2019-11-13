@@ -1,10 +1,22 @@
+
 import {db} from '../../src/config'
 import { getUserByEmailAddress } from '../../src/users/models'
 import { CreateUserRequest, User } from '../../src/users/objects'
+import { OAuth2Client } from 'google-auth-library'
 import request from 'supertest'
 import app from '../../src/app'
+jest.mock('google-auth-library')
 
 beforeAll(async () => {
+  OAuth2Client.prototype.verifyIdToken = async function(): Promise<any> {
+    return {
+      getPayload() {
+        return {
+          email: 'a@test.com'
+        }
+      }
+    }
+  }
   await db.migrate.latest()
   return await db.seed.run()
 })
@@ -27,6 +39,7 @@ describe('User management', () => {
       }
       const res = await request(app)
         .post(url)
+        .set('Authorization', 'Bearer token')
         .send(expected)
       expect(res.status).toBe(201)
       const user = await getUserByEmailAddress('test@test.com')
@@ -40,6 +53,7 @@ describe('User management', () => {
       async function runTest(payload: any, expectedError: any) {
         const response = await request(app)
           .post(url)
+          .set('Authorization', 'Bearer token')
           .send(payload)
         expect(response.status).toBe(400)
         expect(response.body.errors).toContainEqual(expectedError)
@@ -138,6 +152,7 @@ describe('User management', () => {
         it('verifies that the email is not already taken', async () => {
           await request(app)
             .post(url)
+            .set('Authorization', 'Bearer token')
             .send({
               ...baseRequest,
               email: 'good@test.com',
@@ -184,6 +199,7 @@ describe('User management', () => {
         }
         it('should allow creating an user without profileUrl', async () => {
           await request(app).post(url)
+            .set('Authorization', 'Bearer token')
             .send({...baseRequest, email: 'test2@test.com', studentId: '33-33333'})
             .expect(201)
         })
@@ -240,6 +256,7 @@ describe('User management', () => {
         it('verifies that the studentId is not already taken', async () => {
           await request(app)
             .post(url)
+            .set('Authorization', 'Bearer token')
             .send({
               ...baseRequest,
               studentId: '22-22222'
@@ -267,10 +284,12 @@ describe('User management', () => {
       }
       const res = await request(app)
         .post(url)
+        .set('Authorization', 'Bearer token')
         .send(expected)
       const userId = res.body[0].id
       const userRes = await request(app)
         .get(`${url}/${userId}`)
+        .set('Authorization', 'Bearer token')
       expect(userRes.status).toBe(200)
 
       const user : User = userRes.body
@@ -279,6 +298,7 @@ describe('User management', () => {
     it('Returns 404 when user doesnt exists', async () => {
       const res = await request(app)
         .get(`${url}/1331231`)
+        .set('Authorization', 'Bearer token')
       expect(res.status).toBe(404)
     })
   })

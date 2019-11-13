@@ -52,8 +52,8 @@ app.use('/health', (req, res) => {
   res.json({ status: 'UP' })
 })
 
-app.use('/v1/api/users', userRoutes)
-app.use('/v1/api/categories', categoryRoutes)
+app.use('/v1/api/users', passport.authenticate('bearer', { session: false }), userRoutes)
+app.use('/v1/api/categories', passport.authenticate('bearer', { session: false }), categoryRoutes)
 
 app.use(errorHandler)
 

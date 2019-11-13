@@ -3,8 +3,20 @@ import request from 'supertest'
 import app from '../../src/app'
 import { CreateCategoryRequest, ModifyCategoryRequest } from '../../src/categories/objects'
 import { getCategoryByName, getCategoryById } from '../../src/categories/models'
+import { OAuth2Client } from 'google-auth-library'
+jest.mock('google-auth-library')
 
 beforeAll(async () => {
+  OAuth2Client.prototype.verifyIdToken = async function(): Promise<any> {
+    return {
+      getPayload() {
+        return {
+          email: 'a@test.com'
+        }
+      }
+    }
+  }
+
   await db.migrate.latest()
   return await db.seed.run()
 })
@@ -23,6 +35,7 @@ describe('Category management', () => {
       await db.seed.run()
       const emptyCategoriesResponse = await request(app)
         .get(url)
+        .set('Authorization', 'Bearer token')
       expect(emptyCategoriesResponse.status).toBe(200)
       expect(emptyCategoriesResponse.body).toStrictEqual([])
     })
@@ -44,6 +57,7 @@ describe('Category management', () => {
       const res = await request(app)
         .post(url)
         .send(expected)
+        .set('Authorization', 'Bearer token')
       expect(res.status).toBe(201)
 
       const category = await getCategoryByName('Test Category')
@@ -60,6 +74,8 @@ describe('Category management', () => {
         const response = await request(app)
           .post(url)
           .send(payload)
+          .set('Authorization', 'Bearer token')
+
         expect(response.status).toBe(400)
         expect(response.body.errors).toContainEqual(expectedError)
       }
@@ -122,6 +138,7 @@ describe('Category management', () => {
           await request(app)
             .post(url)
             .send(extraRequest)
+            .set('Authorization', 'Bearer token')
 
           await runTest({
             ...baseResponse,
@@ -407,6 +424,7 @@ describe('Category management', () => {
       const resCreation = await request(app)
         .post(url)
         .send(expected)
+        .set('Authorization', 'Bearer token')
 
       expect(resCreation.status).toBe(201)
 
@@ -416,6 +434,8 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .get(lookupUrl)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(200)
 
       const category = {
@@ -442,6 +462,8 @@ describe('Category management', () => {
       const lookupUrl = `${url}/${id}`
       const res = await request(app)
         .get(lookupUrl)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(404)
     })
 
@@ -450,6 +472,8 @@ describe('Category management', () => {
       const lookupUrl = `${url}/${id}`
       const res = await request(app)
         .get(lookupUrl)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(404)
     })
 
@@ -458,6 +482,7 @@ describe('Category management', () => {
       const lookupUrl = `${url}/${id}`
       const res = await request(app)
         .get(lookupUrl)
+        .set('Authorization', 'Bearer token')
       expect(res.status).toBe(400)
     })
   })
@@ -480,6 +505,7 @@ describe('Category management', () => {
       const creationRes = await request(app)
         .post(creationUrl)
         .send(expected)
+        .set('Authorization', 'Bearer token')
 
       expect(creationRes.status).toBe(201)
 
@@ -488,6 +514,8 @@ describe('Category management', () => {
 
       const res = await request(app)
         .get(`${url}?name=${name}`)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(200)
 
       const category = {
@@ -512,18 +540,24 @@ describe('Category management', () => {
       const name = 'Nonexistent name 123'
       const res = await request(app)
         .get(`${url}?name=${name}`)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(404)
     })
 
     it('Raises a bad request error if no name is sent', async() => {
       const res = await request(app)
         .get(url)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(400)
     })
 
     it('Raises a bad request error if empty name is sent', async() => {
       const res = await request(app)
         .get(`${url}?name=`)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(400)
     })
   })
@@ -545,6 +579,7 @@ describe('Category management', () => {
       const resCreation = await request(app)
         .post(url)
         .send(original)
+        .set('Authorization', 'Bearer token')
 
       expect(resCreation.status).toBe(201)
 
@@ -562,6 +597,7 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .put(lookupUrl)
+        .set('Authorization', 'Bearer token')
         .send(expected)
       expect(res.status).toBe(200)
 
@@ -578,6 +614,8 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .put(lookupUrl)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(404)
     })
   })
@@ -599,6 +637,7 @@ describe('Category management', () => {
       const resCreation = await request(app)
         .post(url)
         .send(expected)
+        .set('Authorization', 'Bearer token')
 
       expect(resCreation.status).toBe(201)
 
@@ -608,6 +647,8 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .delete(lookupUrl)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(200)
       expect(res.body.id).toBe(id)
 
@@ -620,6 +661,8 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .delete(lookupUrl)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(404)
     })
 
@@ -628,6 +671,8 @@ describe('Category management', () => {
       const lookupUrl = url + `/${id}`
       const res = await request(app)
         .delete(lookupUrl)
+        .set('Authorization', 'Bearer token')
+
       expect(res.status).toBe(404)
     })
   })
