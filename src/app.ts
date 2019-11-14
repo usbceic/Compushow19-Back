@@ -10,6 +10,7 @@ import passport from 'passport'
 import {Strategy} from 'passport-http-bearer'
 import authorizeWithGoogle from './auth/auth'
 import { UnauthorizedError } from './errorHandling/httpError'
+var cors = require('cors')
 
 const BearerStrategy = Strategy
 const app = express()
@@ -46,6 +47,7 @@ passport.use(new BearerStrategy((token, done) => {
     })
 }))
 
+app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 

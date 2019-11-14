@@ -26,6 +26,7 @@
   "dependencies": {
     "@types/passport": "^1.0.1",
     "@types/passport-http-bearer": "^1.0.34",
+    "cors": "^2.8.5",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
