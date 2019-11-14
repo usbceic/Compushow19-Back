@@ -17,7 +17,7 @@ export async function getUserNominations(request: UserLookupNominationRequest) :
   return await getNominationsByUserId(request.userId)
 }
 
-export async function getUserCategoryNomination(request: UserCategoryLookupRequest) : Promise<NominationModel> {
+export async function getUserCategoryNomination(request: UserCategoryLookupRequest) : Promise<NominationModel[]> {
   return await getNominationByUserAndCategory(request.userId, request.categoryId)
 }
 

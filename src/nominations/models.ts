@@ -40,12 +40,11 @@ export async function getNominationsByCategoryId(categoryId: number) {
     .first()
 }
 
-export async function getNominationByUserAndCategory(userId: number, categoryId: number) : Promise<NominationModel> {
+export async function getNominationByUserAndCategory(userId: number, categoryId: number) : Promise<NominationModel[]> {
   return await db(TABLE_NAME)
     .select(NOMINATION_FIELDS)
     .where('userId', userId)
     .where('categoryId', categoryId)
-    .first()
 }
 
 export async function getAllNominations() : Promise<[NominationModel]> {

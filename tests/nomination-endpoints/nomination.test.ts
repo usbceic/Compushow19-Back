@@ -84,10 +84,10 @@ describe('Nomination management', () => {
         .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(res.status).toBe(201)
 
-      const nomination = await getNominationByUserAndCategory(
+      const nomination = (await getNominationByUserAndCategory(
         adminUser.id,
         category.id
-      )
+      ))[0]
       expect(nomination).toBeDefined()
 
       expect(nomination.userId).toBe(adminUser.id)
@@ -118,10 +118,10 @@ describe('Nomination management', () => {
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(res.status).toBe(201)
 
-      const nomination = await getNominationByUserAndCategory(
+      const nomination = (await getNominationByUserAndCategory(
         nonAdminUser.id,
         category.id
-      )
+      ))[0]
       expect(nomination).toBeDefined()
 
       expect(nomination.userId).toBe(nonAdminUser.id)
@@ -153,11 +153,13 @@ describe('Nomination management', () => {
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(res.status).toBe(201)
 
-      const nomination = await getNominationByUserAndCategory(
+      const nominations = await getNominationByUserAndCategory(
         nonAdminUser.id,
         category.id
       )
-      expect(nomination).toBeDefined()
+      expect(nominations.length > 0).toBe(true)
+      expect(nominations).toBeDefined()
+      const nomination = nominations[0]
 
       expect(nomination.userId).toBe(nonAdminUser.id)
       expect(nomination.categoryId).toBe(expected.categoryId)
@@ -648,10 +650,10 @@ describe('Nomination management', () => {
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(resCreation.status).toBe(201)
 
-      const nomination = await getNominationByUserAndCategory(
+      const nomination = (await getNominationByUserAndCategory(
         nonAdminUser.id,
         category.id
-      )
+      ))[0]
       expect(nomination).toBeDefined()
 
       const res = await request(app)
@@ -663,7 +665,7 @@ describe('Nomination management', () => {
         nonAdminUser.id,
         category.id
       )
-      expect(deletedNomination).toBeUndefined()
+      expect(deletedNomination).toStrictEqual([])
     })
 
     it('Rejects a nomination from being deleted by a non-admin user who did not make it', async () => {
@@ -689,10 +691,10 @@ describe('Nomination management', () => {
         .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(resCreation.status).toBe(201)
 
-      const nomination = await getNominationByUserAndCategory(
+      const nomination = (await getNominationByUserAndCategory(
         adminUser.id,
         category.id
-      )
+      ))[0]
       expect(nomination).toBeDefined()
 
       const res = await request(app)
@@ -730,10 +732,10 @@ describe('Nomination management', () => {
         .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
       expect(resCreation.status).toBe(201)
 
-      const nomination = await getNominationByUserAndCategory(
+      const nomination = (await getNominationByUserAndCategory(
         adminUser.id,
         category.id
-      )
+      ))[0]
       expect(nomination).toBeDefined()
 
       const res = await request(app)
@@ -785,10 +787,10 @@ describe('Nomination management', () => {
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(resCreation.status).toBe(201)
 
-      const nomination = await getNominationByUserAndCategory(
+      const nomination = (await getNominationByUserAndCategory(
         nonAdminUser.id,
         category.id
-      )
+      ))[0]
       expect(nomination).toBeDefined()
 
       const res = await request(app)
@@ -800,7 +802,7 @@ describe('Nomination management', () => {
         nonAdminUser.id,
         category.id
       )
-      expect(deletedNomination).toBeUndefined()
+      expect(deletedNomination).toStrictEqual([])
     })
   })
 })
