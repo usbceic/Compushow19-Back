@@ -38,11 +38,13 @@ export async function getNominationsByUserId(userId: number) : Promise<[Nominati
     })
 }
 
-export async function getNominationsByCategoryId(categoryId: number) {
+export async function getNominationsByCategoryId(categoryId: number) : Promise<[NominationModel]> {
   return await db(TABLE_NAME)
     .select(NOMINATION_FIELDS)
     .where('categoryId', categoryId)
-    .first()
+    .then((nominations) => {
+      return <[NominationModel]>nominations
+    })
 }
 
 export async function getNominationByUserAndCategory(userId: number, categoryId: number) : Promise<NominationModel[]> {
