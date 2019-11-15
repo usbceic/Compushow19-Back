@@ -62,6 +62,7 @@ export async function deleteCategoryById(id: number) : Promise<boolean> {
 export async function getAllCategories() : Promise<[SavedCategoryModel]> {
   return await db(TABLE_NAME)
     .select(CATEGORY_FIELDS)
+    .orderBy('name', 'asc')
     .then((categories) => {
       return <[SavedCategoryModel]>categories
     })
