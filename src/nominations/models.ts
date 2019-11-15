@@ -20,6 +20,11 @@ export interface NominationModel {
   extra?: string
 }
 
+export interface ExtendedNominationModel extends NominationModel {
+  mainNomineeName?: string
+  auxNomineeName?: string
+}
+
 export async function getNominationById(id: number) : Promise<NominationModel> {
   return await db(TABLE_NAME).where('id', id).first()
 }
