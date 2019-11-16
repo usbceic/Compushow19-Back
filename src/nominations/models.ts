@@ -38,13 +38,10 @@ export async function getNominationsByUserId(userId: number) : Promise<[Nominati
     })
 }
 
-export async function getNominationsByCategoryId(categoryId: number) : Promise<[NominationModel]> {
+export async function getNominationsByCategoryId(categoryId: number) : Promise<NominationModel[]> {
   return await db(TABLE_NAME)
     .select(NOMINATION_FIELDS)
     .where('categoryId', categoryId)
-    .then((nominations) => {
-      return <[NominationModel]>nominations
-    })
 }
 
 export async function getNominationByUserAndCategory(userId: number, categoryId: number) : Promise<NominationModel[]> {
@@ -54,12 +51,9 @@ export async function getNominationByUserAndCategory(userId: number, categoryId:
     .where('categoryId', categoryId)
 }
 
-export async function getAllNominations() : Promise<[NominationModel]> {
+export async function getAllNominations() : Promise<NominationModel[]> {
   return await db(TABLE_NAME)
     .select(NOMINATION_FIELDS)
-    .then((nominations) => {
-      return <[NominationModel]>nominations
-    })
 }
 
 export async function nominationExistsById(id: number) : Promise<boolean> {
