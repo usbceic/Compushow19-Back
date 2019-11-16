@@ -72,7 +72,7 @@ describe('Nomination management', () => {
       })
       const adminUser = await getUserByStudentId('id-1') as RegisteredUser
       const category = await getCategoryByName('Test Category')
-      const nominee = await getUserByStudentId('id-1')
+      const nominee = await getUserByStudentId('id-3')
       const expected : CreateNominationRequest = {
         categoryId: category.id,
         mainNominee: nominee.id
@@ -106,7 +106,7 @@ describe('Nomination management', () => {
       })
       const nonAdminUser = await getUserByStudentId('id-2') as RegisteredUser
       const category = await getCategoryByName('Test Category2')
-      const nominee = await getUserByStudentId('id-1')
+      const nominee = await getUserByStudentId('id-4')
       const expected : CreateNominationRequest = {
         categoryId: category.id,
         mainNominee: nominee.id
@@ -140,7 +140,7 @@ describe('Nomination management', () => {
       })
       const nonAdminUser = await getUserByStudentId('id-2') as RegisteredUser
       const category = await getCategoryByName('Test Categorie')
-      const nominee = await getUserByStudentId('id-1')
+      const nominee = await getUserByStudentId('id-5')
       const expected : CreateNominationRequest = {
         categoryId: category.id,
         mainNominee: nominee.id,
@@ -168,7 +168,7 @@ describe('Nomination management', () => {
     })
 
     it('Allows nomination creation for a TO_USER category with main nominee and extra', async () => {
-      const nominee = await getUserByStudentId('id-1')
+      const nominee = await getUserByStudentId('id-6')
       await insertCategory({
         name: 'Test CategoryToUserMNE',
         type: 'TO_USER',
@@ -189,6 +189,12 @@ describe('Nomination management', () => {
         .send(expected)
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(res.status).toBe(201)
+
+      const res2 = await request(app)
+        .post(url)
+        .send(expected)
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(res2.status).toBe(409)
     })
 
     it('Rejects nomination creation for a TO_USER category without main nominee', async () => {

@@ -6,7 +6,7 @@ import { RegisteredUser } from '../users/objects'
 import { categoryLookupSchemaValidator } from '../categories/validations'
 import { UnauthorizedError } from '../errorHandling/httpError'
 import { isAdmin } from '../auth/auth'
-import { NominationModel, addNomineesToNominations, addNomineeToNomination } from './models'
+import { NominationModel, addNomineesToNominations, addNomineeToNomination, nominationAlreadyExists } from './models'
 
 const router = express.Router()
 
@@ -69,13 +69,18 @@ router.get('/byCategory/:categoryId([0-9]+)/byUser', validateRequest(categoryLoo
 
 router.post('', validateRequest(nominationSchemaValidator), asyncWrap(async (req, res) => {
   const user = req.user as RegisteredUser
-  const nomination = await createNomination({
+  const nominationModel = {
     userId: user.id,
     categoryId: req.body.categoryId,
     mainNominee: req.body.mainNominee,
     auxNominee: req.body.auxNominee,
     extra: req.body.extra
-  })
+  }
+  const exists = await nominationAlreadyExists(nominationModel)
+  if (exists) {
+    res.status(409).json(nominationModel)
+  }
+  const nomination = await createNomination(nominationModel)
   res.status(201).json(nomination)
 }))
 

@@ -11,19 +11,52 @@ export async function seed(knex: Knex): Promise<any> {
     await knex(name).del()
   })
 
-  await createUser({
-    canVote: true,
-    email: 'admin@test.com',
-    fullName: 'Admin 1',
-    profileUrl: 'https://google.com',
-    studentId: 'id-1'
-  })
-  await createUser({
-    canVote: true,
-    email: 'user@test.com',
-    fullName: 'User 1',
-    profileUrl: 'https://google.com',
-    studentId: 'id-2'
-  })
+  const sampleUsers = [
+    {
+      email: 'admin@test.com',
+      fullName: 'Admin 1',
+      studentId: 'id-1',
+      profileUrl: 'http://google.com',
+      canVote: true
+    },
+    {
+      email: 'user@test.com',
+      fullName: 'User 1',
+      studentId: 'id-2',
+      profileUrl: 'http://google.com',
+      canVote: true
+    },
+    {
+      email: 'test6@test.com',
+      fullName: 'Test',
+      studentId: 'id-3',
+      profileUrl: 'http://google.com',
+      canVote: true
+    },
+    {
+      email: 'yes@test.com',
+      fullName: 'Yes',
+      studentId: 'id-4',
+      profileUrl: 'http://google.com',
+      canVote: true
+    },
+    {
+      email: 'no@test.com',
+      fullName: 'No',
+      studentId: 'id-5',
+      profileUrl: 'http://google.com',
+      canVote: true
+    },
+    {
+      email: 'testy@test.com',
+      fullName: 'Testy',
+      studentId: 'id-6',
+      profileUrl: 'http://google.com',
+      canVote: true
+    }
+  ]
+
+  const promises = sampleUsers.map(createUser)
+  await Promise.all(promises)
 
 }

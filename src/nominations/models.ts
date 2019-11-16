@@ -1,6 +1,7 @@
 import { db } from '../config'
 import { RegisteredUser } from '../users/objects'
 import { getUserByUserId } from '../users/models'
+import { getCategoryById } from '../categories/models'
 
 const TABLE_NAME = 'nominations'
 
@@ -20,6 +21,10 @@ export interface NominationModel {
   mainNominee?: number
   auxNominee?: number
   extra?: string
+}
+
+export interface SavedNominationModel extends NominationModel {
+  id: number
 }
 
 export interface ExtendedNominationModel {
@@ -89,6 +94,53 @@ export async function getAllNominations() : Promise<NominationModel[]> {
 
 export async function nominationExistsById(id: number) : Promise<boolean> {
   return (await getNominationById(id)) !== undefined
+}
+
+export async function nominationAlreadyExists(nominationAttempt: NominationModel) : Promise <boolean> {
+  const category = await getCategoryById(nominationAttempt.categoryId)
+  const categoryType = category.type
+
+  switch (categoryType) {
+    case 'TO_TWO_USERS':
+      var nomination = await db(TABLE_NAME)
+        .select(NOMINATION_FIELDS)
+        .where('userId', nominationAttempt.userId)
+        .where('categoryId', nominationAttempt.categoryId)
+        .where('mainNominee', nominationAttempt.mainNominee)
+        .where('auxNominee', nominationAttempt.auxNominee)
+        .first()
+      if (nomination !== undefined) {
+        return true
+      }
+      break
+
+    case 'TO_USER':
+    case 'TO_USER_WITH_EXTRA':
+      var nomination = await db(TABLE_NAME)
+        .select(NOMINATION_FIELDS)
+        .where('userId', nominationAttempt.userId)
+        .where('categoryId', nominationAttempt.categoryId)
+        .where('mainNominee', nominationAttempt.mainNominee)
+        .first()
+      if (nomination !== undefined) {
+        return true
+      }
+      break
+
+    case 'ONLY_EXTRA':
+      var nomination = await db(TABLE_NAME)
+        .select(NOMINATION_FIELDS)
+        .where('userId', nominationAttempt.userId)
+        .where('categoryId', nominationAttempt.categoryId)
+        .where('extra', nominationAttempt.extra)
+        .first()
+      if (nomination !== undefined) {
+        return true
+      }
+      break
+  }
+
+  return false
 }
 
 export async function insertNomination(nomination: NominationModel) : Promise<NominationModel> {
