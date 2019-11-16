@@ -52,12 +52,7 @@ export async function addNomineeToNomination(nomination: NominationModel) : Prom
 }
 
 export async function addNomineesToNominations(nominations: NominationModel[]) : Promise<ExtendedNominationModel[]> {
-  var extendedNominations : ExtendedNominationModel[] = []
-  nominations.forEach(async (n) => {
-    extendedNominations.push(await addNomineeToNomination(n))
-  })
-
-  return extendedNominations
+  return await Promise.all(nominations.map(addNomineeToNomination))
 }
 
 export async function getNominationById(id: number) : Promise<NominationModel> {
