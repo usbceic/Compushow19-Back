@@ -11,7 +11,8 @@
     "tsc": "tsc",
     "knex": "knex",
     "upload-coverage": "cat coverage/lcov.info | coveralls",
-    "postinstall": "knex migrate:latest"
+    "postinstall": "knex migrate:latest",
+    "deploy": "git pull && pm2 delete server && npm run tsc && pm2 start lib/server.js"
   },
   "repository": {
     "type": "git",
