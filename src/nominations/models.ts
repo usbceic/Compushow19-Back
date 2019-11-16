@@ -45,7 +45,8 @@ export async function addNomineeToNomination(nomination: NominationModel) : Prom
     userId: nomination.userId,
     categoryId: nomination.categoryId,
     mainNominee: mainNominee,
-    auxNominee: auxNominee
+    auxNominee: auxNominee,
+    extra: nomination.extra
   }
 
   return extendedNomination
