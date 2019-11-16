@@ -6,13 +6,12 @@ import { RegisteredUser } from '../users/objects'
 import { categoryLookupSchemaValidator } from '../categories/validations'
 import { UnauthorizedError } from '../errorHandling/httpError'
 import { isAdmin } from '../auth/auth'
-import { getUserByUserId } from '../users/models'
-import { ExtendedNominationModel } from './models'
+import { NominationModel, addNomineesToNominations, addNomineeToNomination } from './models'
 
 const router = express.Router()
 
 router.get('', asyncWrap(async (req, res) => {
-  var nominations : ExtendedNominationModel[]
+  var nominations : NominationModel[]
   if (isAdmin(req.user as RegisteredUser)) {
     nominations = await listNominations()
   } else {
@@ -22,27 +21,15 @@ router.get('', asyncWrap(async (req, res) => {
     }))
   }
 
-  nominations.forEach((nomination) => {
-    if (nomination.mainNominee !== undefined && nomination.mainNominee !== null) {
-      getUserByUserId(nomination.mainNominee).then((mainNominee) => {
-        nomination.mainNomineeName = mainNominee.fullName
-      })
-    }
-
-    if (nomination.auxNominee !== undefined && nomination.auxNominee !== null) {
-      getUserByUserId(nomination.auxNominee).then((auxNominee) => {
-        nomination.mainNomineeName = auxNominee.fullName
-      })
-    }
-  })
-  res.status(200).json(nominations)
+  const extendedNominations = await addNomineesToNominations(nominations)
+  res.status(200).json(extendedNominations)
 }))
 
 router.get('/:nominationId([0-9]+)', validateRequest(nominationLookupSchemaValidator), asyncWrap(async (req, res) => {
   const id = Number(req.params.nominationId)
   const nomination = await getNomination({
     id: id
-  }) as ExtendedNominationModel
+  }) as NominationModel
   if (nomination === undefined) {
     res.status(404).json(raise404())
   } else {
@@ -50,17 +37,8 @@ router.get('/:nominationId([0-9]+)', validateRequest(nominationLookupSchemaValid
       throw new UnauthorizedError()
     }
 
-    if (nomination.mainNominee !== undefined && nomination.mainNominee !== null) {
-      const mainNominee = await getUserByUserId(nomination.mainNominee)
-      nomination.mainNomineeName = mainNominee.fullName
-    }
-
-    if (nomination.auxNominee !== undefined && nomination.auxNominee !== null) {
-      const auxNominee = await getUserByUserId(nomination.auxNominee)
-      nomination.mainNomineeName = auxNominee.fullName
-    }
-
-    res.status(200).json(nomination)
+    const extendedNomination = await addNomineeToNomination(nomination)
+    res.status(200).json(extendedNomination)
   }
 }))
 
@@ -71,22 +49,10 @@ router.get('/byCategory/:categoryId([0-9]+)', validateRequest(categoryLookupSche
   const categoryId = Number(req.params.categoryId)
   const nominations = await getCategoryNominations({
     categoryId: categoryId
-  }) as ExtendedNominationModel[]
+  }) as NominationModel[]
 
-  nominations.forEach((nomination) => {
-    if (nomination.mainNominee !== undefined && nomination.mainNominee !== null) {
-      getUserByUserId(nomination.mainNominee).then((mainNominee) => {
-        nomination.mainNomineeName = mainNominee.fullName
-      })
-    }
-
-    if (nomination.auxNominee !== undefined && nomination.auxNominee !== null) {
-      getUserByUserId(nomination.auxNominee).then((auxNominee) => {
-        nomination.mainNomineeName = auxNominee.fullName
-      })
-    }
-  })
-  res.status(200).json(nominations)
+  const extendedNominations = await addNomineesToNominations(nominations)
+  res.status(200).json(extendedNominations)
 }))
 
 router.get('/byCategory/:categoryId([0-9]+)/byUser', validateRequest(categoryLookupSchemaValidator), asyncWrap(async (req, res) => {
@@ -95,23 +61,10 @@ router.get('/byCategory/:categoryId([0-9]+)/byUser', validateRequest(categoryLoo
   const nominations = await getUserCategoryNomination({
     categoryId: categoryId,
     userId: user.id
-  }) as ExtendedNominationModel[]
+  }) as NominationModel[]
 
-  nominations.forEach((nomination) => {
-    if (nomination.mainNominee !== undefined && nomination.mainNominee !== null) {
-      getUserByUserId(nomination.mainNominee).then((mainNominee) => {
-        nomination.mainNomineeName = mainNominee.fullName
-      })
-    }
-
-    if (nomination.auxNominee !== undefined && nomination.auxNominee !== null) {
-      getUserByUserId(nomination.auxNominee).then((auxNominee) => {
-        nomination.mainNomineeName = auxNominee.fullName
-      })
-    }
-  })
-
-  res.status(200).json(nominations)
+  const extendedNominations = await addNomineesToNominations(nominations)
+  res.status(200).json(extendedNominations)
 }))
 
 router.post('', validateRequest(nominationSchemaValidator), asyncWrap(async (req, res) => {
