@@ -79,9 +79,10 @@ router.post('', validateRequest(nominationSchemaValidator), asyncWrap(async (req
   const exists = await nominationAlreadyExists(nominationModel)
   if (exists) {
     res.status(409).json(nominationModel)
+  } else {
+    const nomination = await createNomination(nominationModel)
+    res.status(201).json(nomination)
   }
-  const nomination = await createNomination(nominationModel)
-  res.status(201).json(nomination)
 }))
 
 router.delete('/:nominationId([0-9]+)', validateRequest(nominationLookupSchemaValidator), asyncWrap(async (req, res) => {
