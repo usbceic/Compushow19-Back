@@ -1,8 +1,8 @@
 import { db } from '../config'
 
-const TABLE_NAME = 'options'
+const TABLE_NAME = 'nominees'
 
-export interface OptionModel {
+export interface NomineeModel {
   id?: number
   categoryId: number
   name: string
@@ -11,10 +11,10 @@ export interface OptionModel {
   extraPictureUrl?: string
 }
 
-export async function getOptionById(id: number) : Promise<OptionModel> {
+export async function getNomineeById(id: number) : Promise<NomineeModel> {
   return await db(TABLE_NAME).where('id', id).first()
 }
 
-export async function getOptionsByCategoryId(id: number) : Promise<OptionModel[]> {
+export async function getNomineesByCategoryId(id: number) : Promise<NomineeModel[]> {
   return await db(TABLE_NAME).where('categoryId', id)
 }
