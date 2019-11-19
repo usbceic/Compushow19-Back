@@ -4,8 +4,8 @@ export interface NomineeCommentLookupRequest {
   id: number
 }
 
-export interface NomineeCommentsByNomineeLookupRequest {
-  nomineeId: number
+export interface NomineeCommentsByCategoryLookupRequest {
+  categoryId: number
 }
 
 export interface NomineeComment extends NomineeCommentModel

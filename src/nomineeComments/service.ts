@@ -1,8 +1,8 @@
-import { NomineeCommentModel, getNomineeCommentsByNomineeId, getNomineeCommentById } from './models'
-import { NomineeCommentsByNomineeLookupRequest, NomineeCommentLookupRequest } from './objects'
+import { NomineeCommentModel, getNomineeCommentsByCategoryId, getNomineeCommentById } from './models'
+import { NomineeCommentsByCategoryLookupRequest, NomineeCommentLookupRequest } from './objects'
 
-export async function listNomineeCommentsByNominee(request: NomineeCommentsByNomineeLookupRequest) : Promise<NomineeCommentModel[]> {
-  return await getNomineeCommentsByNomineeId(request.nomineeId)
+export async function listNomineeCommentsByCategory(request: NomineeCommentsByCategoryLookupRequest) : Promise<NomineeCommentModel[]> {
+  return await getNomineeCommentsByCategoryId(request.categoryId)
 }
 
 export async function getNomineeComment(request: NomineeCommentLookupRequest) : Promise<NomineeCommentModel> {
