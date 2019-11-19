@@ -10,12 +10,7 @@ export async function getVotesByUser(request: VoteLookupByUserRequest) : Promise
   return await getVotesByUserId(request.userId)
 }
 
-export async function getVotesByNominee(request: VoteLookupByNomineeRequest) : Promise<VoteModel[]> {
   return await getVotesByNomineeId(request.nomineeId)
-}
-
-export async function getVotesByCategory(request: VoteLookupByCategoryRequest) : Promise<VoteModel[]> {
-  return await getVotesByCategoryId(request.categoryId)
 }
 
 export async function getVoteByUserAndCategory(request: VoteLookupByUserAndCategoryRequest) : Promise<VoteModel> {
