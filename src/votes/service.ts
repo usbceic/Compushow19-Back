@@ -1,5 +1,17 @@
-import { VoteLookupRequest, VoteLookupByUserRequest, VoteLookupByNomineeRequest, VoteLookupByCategoryRequest, VoteLookupByUserAndCategoryRequest, CreateVoteRequest } from './objects'
-import { VoteModel, getVoteById, getVotesByUserId, getVotesByNomineeId, getVotesByCategoryId, getVoteByUserIdAndCategoryId, voteExistsByUserIdAndCategoryId, insertVote } from './models'
+import {
+  VoteLookupRequest,
+  VoteLookupByUserRequest,
+  VoteLookupByUserAndCategoryRequest,
+  CreateVoteRequest
+} from './objects'
+import {
+  VoteModel,
+  getVoteById,
+  getVotesByUserId,
+  getVoteByUserIdAndCategoryId,
+  voteExistsByUserIdAndCategoryId,
+  insertVote
+} from './models'
 
 
 export async function getVote(request: VoteLookupRequest) : Promise<VoteModel> {
@@ -10,8 +22,9 @@ export async function getVotesByUser(request: VoteLookupByUserRequest) : Promise
   return await getVotesByUserId(request.userId)
 }
 
-  return await getVotesByNomineeId(request.nomineeId)
-}
+// export async function getVotesByNominee
+//   return await getVotesByNomineeId(request.nomineeId)
+// }
 
 export async function getVoteByUserAndCategory(request: VoteLookupByUserAndCategoryRequest) : Promise<VoteModel> {
   return await getVoteByUserIdAndCategoryId(request.userId, request.categoryId)

@@ -1,4 +1,4 @@
-import { NomineeCommentModel } from './models';
+import { NomineeCommentModel } from './models'
 
 export interface NomineeCommentLookupRequest {
   id: number
@@ -8,4 +8,4 @@ export interface NomineeCommentsByCategoryLookupRequest {
   categoryId: number
 }
 
-export interface NomineeComment extends NomineeCommentModel
+export interface NomineeComment extends NomineeCommentModel {}
