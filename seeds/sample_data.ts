@@ -1,15 +1,19 @@
 import * as Knex from 'knex'
 import { createUser } from '../src/users/service'
+import { CategoryModel } from '../src/categories/models'
+import { createCategory } from '../src/categories/service'
+import { NomineeModel } from '../src/nominees/models'
 
 export async function seed(knex: Knex): Promise<any> {
   // Deletes ALL existing entries
   const TABLE_NAMES = [
     'users',
-    'categories'
+    'categories',
+    'nominees'
   ]
-  TABLE_NAMES.forEach(async (name) => {
+  await Promise.all(TABLE_NAMES.map(async name => {
     await knex(name).del()
-  })
+  }))
 
   const sampleUsers = [
     {
@@ -56,7 +60,47 @@ export async function seed(knex: Knex): Promise<any> {
     }
   ]
 
-  const promises = sampleUsers.map(createUser)
-  await Promise.all(promises)
+  await Promise.all(sampleUsers.map(createUser))
+
+  const categories = await Promise.all(([
+    {
+      color: '',
+      description: 'TO_USER',
+      name: 'TO_USER',
+      pictureUrl: '',
+      type: 'TO_USER'
+    },
+    {
+      color: '',
+      description: 'TO_TWO_USERS',
+      name: 'TO_TWO_USERS',
+      pictureUrl: '',
+      type: 'TO_TWO_USERS'
+    },
+    {
+      color: '',
+      description: 'ONLY_EXTRA',
+      name: 'ONLY_EXTRA',
+      pictureUrl: '',
+      type: 'ONLY_EXTRA'
+    },
+    {
+      color: '',
+      description: 'TO_USER_WITH_EXTRA',
+      name: 'TO_USER_WITH_EXTRA',
+      pictureUrl: '',
+      type: 'TO_USER_WITH_EXTRA'
+    }
+  ] as CategoryModel[])
+    .map(createCategory))
+
+  await Promise.all(categories.map(async category => {
+    await knex('nominees').insert({
+      categoryId: category.id!!,
+      happyPictureUrl: 'http://happy.com',
+      sadPictureUrl: 'http://sad.com',
+      name: category.type
+    })
+  }))
 
 }
