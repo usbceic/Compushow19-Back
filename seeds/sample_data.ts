@@ -2,7 +2,6 @@ import * as Knex from 'knex'
 import { createUser } from '../src/users/service'
 import { CategoryModel } from '../src/categories/models'
 import { createCategory } from '../src/categories/service'
-import { NomineeModel } from '../src/nominees/models'
 
 export async function seed(knex: Knex): Promise<any> {
   // Deletes ALL existing entries
