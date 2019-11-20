@@ -19,7 +19,10 @@ export async function getNomineeCommentById(id: number) : Promise<NomineeComment
 }
 
 export async function getNomineeCommentsByCategoryId(id: number) : Promise<NomineeCommentModel[]> {
-  return await db(TABLE_NAME).where('categoryId', id)
+  return await db(TABLE_NAME)
+    .select(TABLE_NAME + '.*')
+    .join('nominees', 'nominees.id', 'nomineeComments.nomineeId')
+    .where('nominees.categoryId', id)
 }
 
 export async function addNomineeToComment(comment: NomineeCommentModel) : Promise<ExtendedNomineeCommentModel> {
