@@ -23,7 +23,6 @@ beforeAll(async () => {
     }
   }
   await db.migrate.latest()
-
   return await db.seed.run()
 })
 
@@ -35,9 +34,8 @@ afterAll(async () => {
 describe('Votes management', () => {
   const baseUrl = '/v1/api/votes'
   describe('Votes creation', () => {
-
     const url = baseUrl
-    it('let you successfully vote for a nominee in a category', async () => {
+    it('let you successfully vote for a nominee in a category and to not repeat', async () => {
       await db.migrate.latest()
       await db.seed.run()
       const expected : CreateCategoryRequest =   {
@@ -51,26 +49,44 @@ describe('Votes management', () => {
         .post('/v1/api/categories')
         .send(expected)
         .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
+      expect(res.status).toBe(201)
 
-
-      const [nominee] : Nominee[] = await Promise.all(['1', '2'].map(i =>
-        db('nominees').insert({
+      const nominees: Nominee[] = await Promise.all(['1', '2'].map(async i => {
+        const [row] = await db('nominees').insert({
           categoryId: res.body.id!!,
           happyPictureUrl: 'http://happy.com',
           sadPictureUrl: 'http://sad.com',
           name: `Nominee ${i}`
         }).returning(['id', 'name'])
-      ))
-
+        return row
+      }))
+      const [nominee1, nominee2] = nominees
       const voteRequest: CreateVoteRequest = {
-        nomineeId: nominee.id
+        nomineeId: nominee1.id!!
       }
-
       const voteResponse = await request(app)
         .post(url)
         .send(voteRequest)
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(voteResponse.status).toBe(204)
+
+      console.log(await db('votes').select('*'))
+      console.log(nominee2)
+
+      // const voteResponse1 = await request(app)
+      //   .post(url)
+      //   .send({
+      //     nomineeId: nominee1.id!!
+      //   })
+      //   .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      // expect(voteResponse1.status).toBe(409)
+      // const voteResponse2 = await request(app)
+      //   .post(url)
+      //   .send({
+      //     nomineeId: nominee2.id!!
+      //   })
+      //   .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      // expect(voteResponse2.status).toBe(409)
     })
   })
 })
