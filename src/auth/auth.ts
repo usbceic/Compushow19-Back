@@ -12,11 +12,16 @@ async function authorizeWithGoogle(token: string) : Promise<User> {
     idToken: token
   })
   const payload = ticket.getPayload()
+  /* istanbul ignore next */
   if (payload === undefined) {
+    /* istanbul ignore next */
     throw new UnauthorizedError()
   }
+  /* istanbul ignore next */
   const email: string = payload.email || ''
+  /* istanbul ignore next */
   if (!email.endsWith(GOOGLE_EMAIL_DOMAIN)) {
+    /* istanbul ignore next */
     throw new UnauthorizedError()
   }
   const user: User = await getUserByEmail(email)
