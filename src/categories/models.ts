@@ -46,8 +46,9 @@ export async function categoryExistsById(id: number) : Promise<boolean> {
 }
 
 export async function insertCategory(category: CategoryModel) : Promise<SavedCategoryModel> {
-  return await db(TABLE_NAME)
-    .returning(CATEGORY_FIELDS).insert(category)
+  const rows = await db(TABLE_NAME)
+    .insert(category).returning(CATEGORY_FIELDS)
+  return rows[0]
 }
 
 export async function updateCategory(id: number, category: ModifyCategoryRequest) : Promise<SavedCategoryModel> {

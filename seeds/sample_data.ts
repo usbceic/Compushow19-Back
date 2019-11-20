@@ -5,11 +5,12 @@ export async function seed(knex: Knex): Promise<any> {
   // Deletes ALL existing entries
   const TABLE_NAMES = [
     'users',
-    'categories'
+    'categories',
+    'nominees'
   ]
-  TABLE_NAMES.forEach(async (name) => {
+  await Promise.all(TABLE_NAMES.map(async name => {
     await knex(name).del()
-  })
+  }))
 
   const sampleUsers = [
     {
@@ -56,7 +57,6 @@ export async function seed(knex: Knex): Promise<any> {
     }
   ]
 
-  const promises = sampleUsers.map(createUser)
-  await Promise.all(promises)
+  await Promise.all(sampleUsers.map(createUser))
 
 }

@@ -49,7 +49,22 @@ passport.use(new BearerStrategy((token, done) => {
     })
 }))
 
-app.use(cors())
+var whitelist = [
+  'http://localhost:8080',
+  'http://localhost:8000',
+  'https://compushow.link',
+  'http://compushow.link']
+var corsOptions = {
+  origin: function (origin: string, callback: any) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
+app.use(cors(corsOptions))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 

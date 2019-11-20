@@ -37,6 +37,7 @@ describe('Category management', () => {
 
     it('Allows empty category listing', async () => {
       await db.seed.run()
+      await db('categories').delete()
       const emptyCategoriesResponse = await request(app)
         .get(url)
         .set('Authorization', `Bearer ${ADMIN_TOKEN}`)
@@ -448,7 +449,7 @@ describe('Category management', () => {
 
       expect(resCreation.status).toBe(201)
 
-      const id = resCreation.body[0].id
+      const id = resCreation.body.id
       expect(id).toBeDefined()
 
       const lookupUrl = url + `/${id}`
@@ -529,7 +530,7 @@ describe('Category management', () => {
 
       expect(creationRes.status).toBe(201)
 
-      const name = creationRes.body[0].name
+      const name = creationRes.body.name
       expect(name).toBeDefined()
 
       const res = await request(app)
@@ -603,7 +604,7 @@ describe('Category management', () => {
 
       expect(resCreation.status).toBe(201)
 
-      const id = resCreation.body[0].id
+      const id = resCreation.body.id
       expect(id).toBeDefined()
 
       const expected : ModifyCategoryRequest = {
@@ -691,7 +692,7 @@ describe('Category management', () => {
 
       expect(resCreation.status).toBe(201)
 
-      const id = resCreation.body[0].id
+      const id = resCreation.body.id
       expect(id).toBeDefined()
 
       const lookupUrl = url + `/${id}`
@@ -724,7 +725,7 @@ describe('Category management', () => {
 
       expect(resCreation.status).toBe(201)
 
-      const id = resCreation.body[0].id
+      const id = resCreation.body.id
       expect(id).toBeDefined()
 
       const lookupUrl = url + `/${id}`
