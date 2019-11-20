@@ -5,6 +5,7 @@ import { OAuth2Client } from 'google-auth-library'
 import { CreateCategoryRequest } from '../../src/categories/objects'
 import { CreateVoteRequest } from '../../src/votes/objects'
 import { Nominee } from '../../src/nominees/objects'
+import { VoteModel } from '../../src/votes/models'
 jest.mock('google-auth-library')
 
 const ADMIN_TOKEN = 'admin_token'
@@ -70,23 +71,25 @@ describe('Votes management', () => {
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(voteResponse.status).toBe(204)
 
-      console.log(await db('votes').select('*'))
-      console.log(nominee2)
+      const {length} : VoteModel[] = await db('votes').select('*')
+      expect(length).toBeTruthy()
 
-      // const voteResponse1 = await request(app)
-      //   .post(url)
-      //   .send({
-      //     nomineeId: nominee1.id!!
-      //   })
-      //   .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
-      // expect(voteResponse1.status).toBe(409)
-      // const voteResponse2 = await request(app)
-      //   .post(url)
-      //   .send({
-      //     nomineeId: nominee2.id!!
-      //   })
-      //   .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
-      // expect(voteResponse2.status).toBe(409)
+      const voteResponse1 = await request(app)
+        .post(url)
+        .send({
+          nomineeId: nominee1.id!!
+        })
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(voteResponse1.status).toBe(409)
+      const voteResponse2 = await request(app)
+        .post(url)
+        .send({
+          nomineeId: nominee2.id!!
+        })
+        .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
+      expect(voteResponse2.status).toBe(409)
+      const {length: newLength}: VoteModel[] = await db('votes').select('*')
+      expect(newLength).toBe(length)
     })
   })
 })

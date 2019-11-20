@@ -6,7 +6,8 @@ export async function seed(knex: Knex): Promise<any> {
   const TABLE_NAMES = [
     'users',
     'categories',
-    'nominees'
+    'nominees',
+    'votes'
   ]
   await Promise.all(TABLE_NAMES.map(async name => {
     await knex(name).del()
