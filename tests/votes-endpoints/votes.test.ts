@@ -124,7 +124,7 @@ describe('Votes management', () => {
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(voteResponse.status).toBe(200)
     })
-    it('the vote from user a is different from user b', async () => {
+    it('the vote from user "a" is different from user "b"', async () => {
       let [nominee] = nominees
       await db('votes').delete()
       await request(app)
@@ -137,7 +137,7 @@ describe('Votes management', () => {
       const voteResponse = await request(app)
         .get(`${url}/${category.id}`)
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
-      expect(voteResponse.status).toBe(409)
+      expect(voteResponse.status).toBe(404)
     })
   })
 })
