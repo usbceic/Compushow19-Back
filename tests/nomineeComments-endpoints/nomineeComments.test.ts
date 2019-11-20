@@ -83,7 +83,6 @@ describe('Nominees comments management', () => {
         .get(`${url}/byCategory/${category.id}`)
         .set('Authorization', `Bearer ${NON_ADMIN_TOKEN}`)
       expect(commentsResponse.status).toBe(200)
-      console.log(commentsResponse.body)
       expect(commentsResponse.body.length).toBe(1)
 
       const comment : ExtendedNomineeCommentModel = commentsResponse.body[0]
