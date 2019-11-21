@@ -16,7 +16,7 @@ router.get('/byCategory/:categoryId([0-9]+)', validateRequest(nomineeCommentsByC
     var selectedComments : ExtendedNomineeCommentModel[] = []
     var selectedIndexes = []
     while (selectedComments.length < 8) {
-      const randomIndex = Math.round(Math.random() * extendedComments.length)
+      const randomIndex = Math.round(Math.random() * extendedComments.length) % extendedComments.length
       selectedComments.push(extendedComments[randomIndex])
       selectedIndexes.push(randomIndex)
     }
