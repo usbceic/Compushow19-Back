@@ -2,17 +2,28 @@ import express from 'express'
 import { asyncWrap, validateRequest } from '../utils'
 import { nomineeCommentsByCategorySchemaValidator } from './validations'
 import { listNomineeCommentsByCategory } from './service'
-import { addNomineesToComments } from './models'
+import { addNomineesToComments, ExtendedNomineeCommentModel } from './models'
 
 const router = express.Router()
 
 router.get('/byCategory/:categoryId([0-9]+)', validateRequest(nomineeCommentsByCategorySchemaValidator), asyncWrap(async (req, res) => {
   const id = Number(req.params.categoryId)
-  const nominees = await listNomineeCommentsByCategory({
+  const comments = await listNomineeCommentsByCategory({
     categoryId: id
   })
-  const extendedNominees = await addNomineesToComments(nominees)
-  res.status(200).json(extendedNominees)
+  const extendedComments = await addNomineesToComments(comments)
+  if (extendedComments.length > 5) {
+    var selectedComments : ExtendedNomineeCommentModel[] = []
+    var selectedIndexes = []
+    while (selectedComments.length < 5) {
+      const randomIndex = Math.round(Math.random() * extendedComments.length)
+      selectedComments.push(extendedComments[randomIndex])
+      selectedIndexes.push(randomIndex)
+    }
+    res.status(200).json(selectedComments)
+  } else {
+    res.status(200).json(extendedComments)
+  }
 }))
 
 export default router
