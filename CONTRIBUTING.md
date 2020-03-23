@@ -8,7 +8,7 @@ Esta miniguía va a consistir en como desarrollar en este proyecto. Contiene una
     1. [Controlador](#Controlador)
     2. [Servicio](#Servicio)
     3. [Repositorios](#Repositorios)
-3. [Herramientas](#Herramientas)
+2. [Herramientas](#Herramientas)
 3. [Pruebas](#Pruebas)
 4. [Contribuir](#Contribuir)
 5. [Reusabilidad](#Reusabilidad)
