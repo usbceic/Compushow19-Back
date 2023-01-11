@@ -33,7 +33,7 @@
     "express-validator": "^6.2.0",
     "express-winston": "^4.0.0",
     "google-auth-library": "^5.5.1",
-    "knex": "^0.19.5",
+    "knex": "^2.4.0",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
     "pg": "^7.12.1",
